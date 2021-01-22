@@ -257,7 +257,9 @@ try:
     st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
     st.write(data.head(5))
     
-    plots.plot(selected_plot)
+    plots.plot(selected_plot,
+               data,
+               text_column)
 
 except KeyError:
     st.error("Please select a key value from the dropdown to continue.")
@@ -268,14 +270,4 @@ except ValueError:
 except TypeError:
      st.error("Oops, something went wrong. Please check previous steps for inconsistent input.")
     
-# check internet connection and throw error if none
-except urllib.error.URLError as e:
-    st.error(
-        """
-        **This demo requires internet access.**
-
-        Connection error: %s
-    """
-        % e.reason
-    )
 
