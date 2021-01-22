@@ -135,7 +135,9 @@ def plot_top_non_stopwords_barchart(text):
     plt.title('Word count in input\n\n', 
               fontweight ="bold")           
 
-def plot(selected_plot):
+def plot(selected_plot,
+         data, 
+         text_column):
     plots = selected_plot
     if 'Length of text' in plots:
         
