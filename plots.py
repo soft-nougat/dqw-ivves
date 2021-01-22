@@ -2,6 +2,9 @@
 """
 Created on Fri Jan 22 14:56:29 2021
 
+This scripts holds all code for plots in the DQW app.
+It also holds plot descriptions in the app.
+
 @author: TNIKOLIC
 """
 import pos

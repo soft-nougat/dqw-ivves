@@ -6,11 +6,27 @@ Created on Tue Dec 29 17:23:54 2020
 """
 
 import streamlit as st
+# components allow for pyLDAvis interactive graph display
 import streamlit.components.v1 as components
 import spacy
 spacy.load("en_core_web_sm")
 from spacy.lang.en import English
 parser = English()
+import nltk
+nltk.download('wordnet')
+from nltk.corpus import wordnet as wn
+from nltk.stem.wordnet import WordNetLemmatizer
+nltk.download('stopwords')
+en_stop = set(nltk.corpus.stopwords.words('english'))
+from gensim import corpora
+import random
+import pyLDAvis.gensim
+import gensim
+import warnings
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 def tokenize(text):
     lda_tokens = []
     tokens = parser(text)
@@ -25,10 +41,6 @@ def tokenize(text):
             lda_tokens.append(token.lower_)
     return lda_tokens   
  
-import nltk
-nltk.download('wordnet')
-from nltk.corpus import wordnet as wn
-
 def get_lemma(word):
     lemma = wn.morphy(word)
     if lemma is None:
@@ -36,13 +48,8 @@ def get_lemma(word):
     else:
         return lemma
     
-from nltk.stem.wordnet import WordNetLemmatizer
-
 def get_lemma2(word):
     return WordNetLemmatizer().lemmatize(word)
-
-nltk.download('stopwords')
-en_stop = set(nltk.corpus.stopwords.words('english'))
 
 def prepare_text_for_lda(text):
     tokens = tokenize(text)
@@ -52,7 +59,7 @@ def prepare_text_for_lda(text):
     return tokens
 
 def main_function(input, NUM_TOPICS):
-    import random
+    
     text_data = []
     for i in input:
         tokens = prepare_text_for_lda(i)
@@ -63,12 +70,9 @@ def main_function(input, NUM_TOPICS):
     if len(text_data) == 0:
         text_data = [i.split() for i in input]
     
-    from gensim import corpora
+    
     dictionary = corpora.Dictionary(text_data)
     corpus = [dictionary.doc2bow(text) for text in text_data]
-    #import pickle
-    #pickle.dump(corpus, open('corpus.pkl', 'wb'))
-    #dictionary.save('dictionary.gensim')
     
     import gensim
     ldamodel = gensim.models.ldamodel.LdaModel(corpus, 
@@ -87,11 +91,6 @@ def main_function(input, NUM_TOPICS):
         
     else:
         
-        #dictionary = gensim.corpora.Dictionary.load('dictionary.gensim')
-        #corpus = pickle.load(open('corpus.pkl', 'rb'))
-        #lda = gensim.models.ldamodel.LdaModel.load('model5.gensim')
-        import pyLDAvis.gensim
-        #lda10 = gensim.models.ldamodel.LdaModel.load('model10.gensim')
         lda_display = pyLDAvis.gensim.prepare(ldamodel, 
                                                    corpus, 
                                                    dictionary, 
@@ -106,18 +105,12 @@ def main_function(input, NUM_TOPICS):
             
 
 def word_importance(topics):        
-    import gensim
-    import warnings
-    import pandas as pd
-    import seaborn as sns
-    import matplotlib.pyplot as plt
     warnings.filterwarnings("ignore")
     lda = gensim.models.LdaModel.load('model.gensim')
     
     fiz=plt.figure(figsize=(15,30))
     for i in range(topics):
         df=pd.DataFrame(lda.show_topic(i), columns=['Term','Prob']).set_index('Term')
-        #     df=df.sort_values('prob')
         
         plt.subplot(5,2,i+1)
         plt.title('Topic '+str(i+1))

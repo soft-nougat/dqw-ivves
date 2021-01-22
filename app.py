@@ -2,12 +2,13 @@
 """
 Created on Sat Dec 26 17:04:46 2020
 
+Script with defined app, including styling.
+
 @author: TNIKOLIC
 """
 import plots
 import streamlit as st
 import pandas as pd
-import urllib as urllib
 import base64
 import SessionState
 # Load the LDA model from gensim
