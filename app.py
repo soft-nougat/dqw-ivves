@@ -23,6 +23,7 @@ from collections import Counter
 from nltk.stem import WordNetLemmatizer,PorterStemmer
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import CountVectorizer
+nltk.download('punkt')
 #import pyLDAvis.gensim
 from wordcloud import WordCloud, STOPWORDS
 import SessionState
