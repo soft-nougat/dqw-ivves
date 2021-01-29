@@ -248,13 +248,8 @@ def plot(selected_plot,
                  "unobserved groups that explain why some parts of the data are similar. ",
                  "Please start by selecting the number of topics you wish to generate.")
                  
-        topics = st.slider("Please select number of topics", 
-                  min_value=1, 
-                  max_value=10, 
-                  value=None, 
-                  step=None, 
-                  format=None, 
-                  key=None)     
+        topics = st.number_input('Select number of topics to generate',
+                                 min_value = 1, format = '%i')   
         
         st.write("This dashbard firstly offers the LDA topic visualisation plot.",
                  "On the left side, the area of each circle ",
