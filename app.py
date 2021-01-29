@@ -271,14 +271,6 @@ try:
               linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
               st.markdown(linko, unsafe_allow_html=True)
               
-        
-              
-    
-    
-    display_app_header(main_txt = "Step 2",
-                       sub_txt= "Analyse data",
-                       is_sidebar=True)
-    
     
     st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
     st.write(data.head(5))

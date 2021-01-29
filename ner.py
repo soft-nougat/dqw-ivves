@@ -59,7 +59,7 @@ def plot_most_common_named_entity_barchart(text, entity):
     entity_filtered=[i for x in entity_filtered for i in x]
         
     counter=Counter(entity_filtered)
-    x,y=map(list,zip(*counter.most_common()))
+    x,y=map(list,zip(*counter.most_common(30)))
     sns.barplot(y,x).set_title(entity)       
         
     st.pyplot() 
