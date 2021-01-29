@@ -120,7 +120,7 @@ def plot_top_non_stopwords_barchart(text):
     counter=Counter(corpus)
     most=counter.most_common()
     x, y=[], []
-    for word,count in most[:40]:
+    for word,count in most[:30]:
         if (word not in stop):
             x.append(word)
             y.append(count)

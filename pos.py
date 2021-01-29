@@ -46,7 +46,7 @@ def plot_most_common_part_of_speech_barchart(text, part_of_speech):
     words=text.apply(lambda x : _filter_pos(x))
     words=[x for l in words for x in l]
     counter=Counter(words)
-    x,y=list(map(list,zip(*counter.most_common())))
+    x,y=list(map(list,zip(*counter.most_common(30))))
     sns.barplot(x=y,y=x).set_title(part_of_speech)
     
     st.pyplot()
