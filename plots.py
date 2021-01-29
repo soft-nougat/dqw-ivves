@@ -97,22 +97,17 @@ def plot_top_stopwords_barchart(text):
         if word in stop:
             dic[word]+=1
             
-    if len(dic) == 0:
-        
-        st.error("Cannot run this plot because the data has been preprocessed or has no stopwords to extract.")
+    top=sorted(dic.items(), key=lambda x:x[1],reverse=True)[:10] 
+    x,y=zip(*top)
+    plt.bar(x,y,color='c')
+
+    plt.xlabel('Count in input')
+    plt.ylabel('Word')
+  
+    plt.title('Word count in input\n\n', 
+              fontweight ="bold")          
     
-    else:
-        top=sorted(dic.items(), key=lambda x:x[1],reverse=True)[:10] 
-        x,y=zip(*top)
-        plt.bar(x,y,color='c')
-    
-        plt.xlabel('Count in input')
-        plt.ylabel('Word')
-      
-        plt.title('Word count in input\n\n', 
-                  fontweight ="bold")          
-        
-        st.pyplot()
+    st.pyplot()
             
 def plot_top_non_stopwords_barchart(text):
     nltk.download('stopwords')
@@ -204,9 +199,9 @@ def plot(selected_plot,
         
         plot_top_stopwords_barchart(data[text_column])
         
-    elif "Exclude" in plots:
+    elif "Unique words" in plots:
         
-        st.subheader("Count words, excluding stopwords")
+        st.subheader("Count unique words, excluding stopwords")
         
         st.write("Word count in input.")
         
