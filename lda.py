@@ -94,7 +94,8 @@ def main_function(input, NUM_TOPICS):
         lda_display = pyLDAvis.gensim.prepare(ldamodel, 
                                                    corpus, 
                                                    dictionary, 
-                                                   sort_topics=False)
+                                                   sort_topics=False,
+                                                   mds='mmds')
         pyLDAvis.save_html(lda_display, 'lda_display.html')
         
         # display html page in streamlit
@@ -112,7 +113,11 @@ def word_importance(topics):
     for i in range(topics):
         df=pd.DataFrame(lda.show_topic(i), columns=['Term','Prob']).set_index('Term')
         
-        plt.subplot(5,2,i+1)
+        if topics < 5:
+            plt.subplot(5,2,i+1)
+        else:
+            plt.subplot(topics,2,i+1)
+            
         plt.title('Topic '+str(i+1))
         sns.barplot(x='Prob', 
                     y=df.index, 
