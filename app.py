@@ -216,12 +216,16 @@ try:
     if clean_data_opt=='Skip preprocessing':
             st.subheader('Using Raw data :cut_of_meat:')  #Raw data header
             
+            display_app_header(main_txt = "Step 2",
+                   sub_txt= "Analyse data",
+                   is_sidebar=True)
+            
             selected_plot = st.sidebar.radio(
             "Choose 1 plot", ('Length of text', 
                             'Word count',
                             'Average word length',
                             'Stopwords',
-                            'Unique words, excluding stopwords',
+                            'Unique word count',
                             'N-grams',
                             'Topic modelling',
                             'Wordcloud',
@@ -240,11 +244,15 @@ try:
             ss.to_encode = True
     
     if clean_data_opt=='Run preprocessing':
+        display_app_header(main_txt = "Step 2",
+                   sub_txt= "Analyse data",
+                   is_sidebar=True)
+            
         selected_plot = st.sidebar.radio(
         "Choose 1 plot", ('Length of text', 
                         'Word count',
                         'Average word length',
-                        'Unique words',
+                        'Unique word count',
                         'N-grams',
                         'Topic modelling',
                         'Wordcloud',

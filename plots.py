@@ -199,7 +199,7 @@ def plot(selected_plot,
         
         plot_top_stopwords_barchart(data[text_column])
         
-    elif "Unique words" in plots:
+    elif "Unique word count" in plots:
         
         st.subheader("Count unique words, excluding stopwords")
         
