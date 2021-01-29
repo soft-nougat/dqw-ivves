@@ -6,6 +6,7 @@ Script with defined app, including styling.
 
 @author: TNIKOLIC
 """
+import json
 import plots
 import streamlit as st
 import pandas as pd
@@ -123,15 +124,16 @@ def select_text_feature(df) -> pd.DataFrame :
     return df,text_col
 
 
-def get_input(ss_text,is_batch=False,text_column = "text"):
+def get_input(data_input_mthd,ss_text,is_batch=False,text_column = "text"):
     """
-    function get input from user either by uploading a csv file of  pasting text
+    function get input from user either by uploading a csv file, pasting text
+    or importing json files
     ----------
     ss_text: string
     is_batch: bool 
     text_column: str -> the columnn name for creating pd.DataFrame is _is_batch is False
     """
-    if is_batch:
+    if 'CSV' in data_input_mthd:
         uploaded_file = st.file_uploader("Choose a csv file to analyse", type="csv")
 
         if uploaded_file is not None:
@@ -142,32 +144,57 @@ def get_input(ss_text,is_batch=False,text_column = "text"):
             st.info('Please upload a csv file')
             return pd.DataFrame(),ss_text
 
-    else: 
+    elif 'Copy-Paste text' in data_input_mthd: 
         ss_text = st.text_area("Type in text to analyse", ss_text)
         df = pd.DataFrame(data=[ss_text],columns=[text_column])
         return df,ss_text
+    
+    elif 'json' in data_input_mthd:
+        uploaded_file = st.file_uploader("Choose a json file to analyse",
+                                         type = "json")
+
+        if uploaded_file is not None:
+            st.success('File upload successful')
+            data = json.load(uploaded_file)
+            df = pd.json_normalize(data)
+            #df = pd.read_json(uploaded_file)
+            return df,ss_text
+        else:
+            st.info('Please upload a json file')
+            return pd.DataFrame(),ss_text
  
     
 def check_input_method(data_input_mthd):
     """
-    function check user input method if uploading or pasting
+    function check user input method if uploading or pasting or using
+    a json file
     Parameters
     ----------
     data_input_mthd: str -> the default displayed text for decision making
     """
 
-    if data_input_mthd=='Copy-Paste text':
-        df,ss.txt = get_input(ss_text= ss.txt)
+    if 'Copy-Paste text' in data_input_mthd:
+        df,ss.txt = get_input(data_input_mthd,
+                              ss_text= ss.txt)
 
 
-    else:
-        df,ss.txt= get_input(is_batch=True,ss_text= ss.txt)
+    elif 'CSV' in data_input_mthd:
+        df,ss.txt= get_input(data_input_mthd,
+                             ss_text= ss.txt,
+                             is_batch=True)
         if df.shape[0]>0:
             # ss.is_batch_process = True
             ss.is_file_uploaded = True
+    elif 'json' in data_input_mthd:
+        df,ss.txt= get_input(data_input_mthd,
+                             ss_text= ss.txt,
+                             is_batch=True)
+        if df.shape[0]>0:
+            # ss.is_batch_process = True
+            ss.is_file_uploaded = True
+        
     
     return df,ss.txt
-
 
 # app setup 
 try:
@@ -198,7 +225,8 @@ try:
     
     data_input_mthd = st.sidebar.radio("Select Data Input Method",
                                        ('Copy-Paste text', 
-                                        'Upload a CSV file'))
+                                        'Upload a CSV file',
+                                        'Import a json file'))
     
     st.subheader('Choose data to analyse :alembic:')
     data,txt  = check_input_method(data_input_mthd)
