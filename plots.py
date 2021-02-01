@@ -262,9 +262,7 @@ def plot(selected_plot,
                  "On the right side, the histogram of each topic shows the ",
                  "top 30 relevant words.")
         
-        ldamodel, corpus, dictionary = lda.main_function(data[text_column], topics)
-        
-        lda.get_coherence(ldamodel, corpus, dictionary)
+        lda.main_function(data[text_column], topics)
         
         st.write("Secondly, the dashboard displays word importance in each topic.")
         
