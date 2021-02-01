@@ -126,7 +126,7 @@ def get_coherence(ldamodel,
 def word_importance(topics):        
     warnings.filterwarnings("ignore")
     lda = gensim.models.LdaModel.load('model.gensim')
-    
+    fiz=plt.figure(figsize=(15,30))
     for i in range(topics):
         df=pd.DataFrame(lda.show_topic(i), columns=['Term','Prob']).set_index('Term')
         
