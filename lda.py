@@ -4,7 +4,6 @@ Created on Tue Dec 29 17:23:54 2020
 
 @author: TNIKOLIC
 """
-
 import streamlit as st
 # components allow for pyLDAvis interactive graph display
 import streamlit.components.v1 as components
@@ -26,6 +25,7 @@ import warnings
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+
 
 def tokenize(text):
     lda_tokens = []
@@ -74,15 +74,16 @@ def main_function(input, NUM_TOPICS):
     dictionary = corpora.Dictionary(text_data)
     corpus = [dictionary.doc2bow(text) for text in text_data]
     
-    import gensim
     ldamodel = gensim.models.ldamodel.LdaModel(corpus, 
                                                num_topics = NUM_TOPICS, 
                                                id2word=dictionary, 
                                                passes=15)
-    ldamodel.save('model.gensim')
+    #ldamodel.save('model.gensim')
     topics = ldamodel.print_topics(num_words=4)
     for topic in topics:
         st.write(topic) 
+        
+    ldamodel.save('model.gensim')
 
     # check if user input is 1 topic, if so, display error
     if NUM_TOPICS == 1:
@@ -94,7 +95,8 @@ def main_function(input, NUM_TOPICS):
         lda_display = pyLDAvis.gensim.prepare(ldamodel, 
                                                    corpus, 
                                                    dictionary, 
-                                                   sort_topics=False)
+                                                   sort_topics=False,
+                                                   mds='mmds')
         pyLDAvis.save_html(lda_display, 'lda_display.html')
         
         # display html page in streamlit
@@ -102,17 +104,37 @@ def main_function(input, NUM_TOPICS):
         lda_display = open("lda_display.html", 'r', encoding='utf-8')
         source_code = lda_display.read() 
         components.html(source_code, height = 800, scrolling=True)    
-            
+        
+    return ldamodel, corpus, dictionary
+      
+def get_coherence(ldamodel,
+                  corpus,
+                  dictionary):
+    
+    from gensim.models import CoherenceModel
 
+        
+    coherence_model_lda = CoherenceModel(model=ldamodel, 
+                                         corpus=corpus, 
+                                         dictionary=dictionary, 
+                                         coherence='u_mass')
+    
+    coherence_lda = coherence_model_lda.get_coherence()
+    
+    st.write("The u_mass coherence score for this model and number of topics is ", coherence_lda)
+    
 def word_importance(topics):        
     warnings.filterwarnings("ignore")
     lda = gensim.models.LdaModel.load('model.gensim')
     
-    fiz=plt.figure(figsize=(15,30))
     for i in range(topics):
         df=pd.DataFrame(lda.show_topic(i), columns=['Term','Prob']).set_index('Term')
         
-        plt.subplot(5,2,i+1)
+        if topics < 5:
+            plt.subplot(5,2,i+1)
+        else:
+            plt.subplot(topics,2,i+1)
+            
         plt.title('Topic '+str(i+1))
         sns.barplot(x='Prob', 
                     y=df.index, 
