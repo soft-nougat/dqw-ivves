@@ -251,6 +251,8 @@ def plot(selected_plot,
         topics = st.number_input('Select number of topics to generate',
                                  min_value = 1, format = '%i')   
         
+        topics = int(topics)
+        
         st.write("This dashbard firstly offers the LDA topic visualisation plot.",
                  "On the left side, the area of each circle ",
                  "represents the importance of the topic relative to the ",
@@ -260,7 +262,9 @@ def plot(selected_plot,
                  "On the right side, the histogram of each topic shows the ",
                  "top 30 relevant words.")
         
-        lda.main_function(data[text_column], topics)
+        ldamodel, corpus, dictionary = lda.main_function(data[text_column], topics)
+        
+        lda.get_coherence(ldamodel, corpus, dictionary)
         
         st.write("Secondly, the dashboard displays word importance in each topic.")
         
