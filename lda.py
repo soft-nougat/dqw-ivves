@@ -83,6 +83,10 @@ def main_function(input, NUM_TOPICS):
     for topic in topics:
         st.write(topic) 
         
+    get_coherence(ldamodel,
+                  corpus,
+                  dictionary)
+        
     ldamodel.save('model.gensim')
 
     # check if user input is 1 topic, if so, display error
@@ -105,8 +109,6 @@ def main_function(input, NUM_TOPICS):
         source_code = lda_display.read() 
         components.html(source_code, height = 800, scrolling=True)    
         
-    return ldamodel, corpus, dictionary
-      
 def get_coherence(ldamodel,
                   corpus,
                   dictionary):
