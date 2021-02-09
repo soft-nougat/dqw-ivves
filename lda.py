@@ -293,14 +293,16 @@ def plot_best_topic_number(topic_final,
 def word_importance(topics):        
     warnings.filterwarnings("ignore")
     lda = gensim.models.LdaModel.load('model.gensim')
-    fiz=plt.figure(figsize=(10,20))
+    fiz=plt.figure(figsize=(15,30))
     for i in range(topics):
         df=pd.DataFrame(lda.show_topic(i), columns=['Term','Prob']).set_index('Term')
         
         if topics < 5:
             plt.subplot(5,2,i+1)
+            plt.tight_layout() 
         else:
             plt.subplot(topics,2,i+1)
+            plt.tight_layout() 
             
         plt.title('Topic '+str(i+1))
         sns.barplot(x='Prob', 
