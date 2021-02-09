@@ -246,13 +246,26 @@ def plot(selected_plot,
         st.write("Latent Dirichlet Allocation is a  is a generative statistical ",
                  "model that allows sets of observations to be explained by ",
                  "unobserved groups that explain why some parts of the data are similar. ",
-                 "Please start by selecting the number of topics you wish to generate.")
+                 "Please start either by running model optimization or by selecting the ",
+                 "number of topics you wish to generate.")
+        
+        option = st.multiselect('Would you like to find an optimal number of topics according to your input?',
+                               ('Yes', 'No'))
+        
+        if 'Yes' in option:
+            
+            topics = lda.main_function_optimal(data[text_column])
+            
+            
+        elif 'No' in option:
+            
+            topics = st.number_input('Select number of topics to generate',
+                                     min_value = 1, format = '%i')
                  
-        topics = st.number_input('Select number of topics to generate',
-                                 min_value = 1, format = '%i')   
-        
-        topics = int(topics)
-        
+            topics = int(topics)
+            
+            lda.main_function(data[text_column], topics)
+            
         st.write("This dashbard firstly offers the LDA topic visualisation plot.",
                  "On the left side, the area of each circle ",
                  "represents the importance of the topic relative to the ",
@@ -262,7 +275,6 @@ def plot(selected_plot,
                  "On the right side, the histogram of each topic shows the ",
                  "top 30 relevant words.")
         
-        lda.main_function(data[text_column], topics)
         
         st.write("Secondly, the dashboard displays word importance in each topic.")
         
