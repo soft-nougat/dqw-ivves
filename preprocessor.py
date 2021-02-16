@@ -124,7 +124,6 @@ def clean_data(df,feature):
         tokens = normalize(tokens)
         #3b)
         lemmas = lemmatize_verbs(tokens)
-        st.write(lemmas)
         doc.append(' '.join(lemmas))   
                       
     df[feature]= doc 
