@@ -292,12 +292,14 @@ try:
             # final step
             download=st.button('Click here to download clean data')
             if download:
-                  df_download= pd.DataFrame(data)
-                  #df_download
-                  csv = df_download.to_csv(index=False)
-                  b64 = base64.b64encode(csv.encode()).decode()  # some strings
-                  linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
-                  st.markdown(linko, unsafe_allow_html=True)
+              'Download Started!'
+              df_download= pd.DataFrame(data)
+              #df_download.columns=[text_column]
+              df_download
+              csv = df_download.to_csv(index=False)
+              b64 = base64.b64encode(csv.encode()).decode()  # some strings
+              linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
+              st.markdown(linko, unsafe_allow_html=True)
               
     
     st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
