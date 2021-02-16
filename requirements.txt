@@ -18,6 +18,7 @@ cffi==1.14.4
 chardet==4.0.0
 click==7.1.2
 colorama==0.4.4
+contractions
 concepts==0.9.2
 cycler==0.10.0
 cymem==2.0.5
@@ -134,3 +135,5 @@ webencodings==0.5.1
 Werkzeug==1.0.1
 widgetsnbextension==3.5.1
 wordcloud==1.8.1
+inflect
+BeautifulSoup4
