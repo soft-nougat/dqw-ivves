@@ -7,7 +7,7 @@ https://www.kdnuggets.com/2018/03/text-data-preprocessing-walkthrough-python.htm
 
 @author: TNIKOLIC
 """
-
+import streamlit as st
 import warnings
 warnings.filterwarnings("ignore",category=DeprecationWarning)
 import re, unicodedata
@@ -124,7 +124,7 @@ def clean_data(df,feature):
         tokens = normalize(tokens)
         #3b)
         lemmas = lemmatize_verbs(tokens)
-        
+        st.write(lemmas)
         doc.append(' '.join(lemmas))   
                       
     df[feature]= doc 
