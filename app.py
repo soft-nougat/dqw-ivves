@@ -242,6 +242,7 @@ try:
     
     # clean data #######
     if clean_data_opt=='Skip preprocessing':
+        
             st.subheader('Using Raw data :cut_of_meat:')  #Raw data header
             
             display_app_header(main_txt = "Step 2",
@@ -267,37 +268,36 @@ try:
                 ss.to_encode = True
     else:
             st.subheader('Using Clean Data :droplet:')  #Clean data header
-            ss.df = pp.clean_data(data,feature=text_column)
+            data = pp.clean_data(data,feature=text_column)
             st.success('Data cleaning successfuly done')
             ss.to_encode = True
     
-    if clean_data_opt=='Run preprocessing':
-        display_app_header(main_txt = "Step 2",
-                   sub_txt= "Analyse data",
-                   is_sidebar=True)
+            display_app_header(main_txt = "Step 2",
+                       sub_txt= "Analyse data",
+                       is_sidebar=True)
             
-        selected_plot = st.sidebar.radio(
-        "Choose 1 plot", ('Length of text', 
-                        'Word count',
-                        'Average word length',
-                        'Unique word count',
-                        'N-grams',
-                        'Topic modelling',
-                        'Wordcloud',
-                        'Sentiment',
-                        'NER',
-                        'POS',
-                        'Complexity Scores')
-        )
-        # final step
-        download=st.button('Click here to download clean data')
-        if download:
-              df_download= pd.DataFrame(data)
-              #df_download
-              csv = df_download.to_csv(index=False)
-              b64 = base64.b64encode(csv.encode()).decode()  # some strings
-              linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
-              st.markdown(linko, unsafe_allow_html=True)
+            selected_plot = st.sidebar.radio(
+            "Choose 1 plot", ('Length of text', 
+                            'Word count',
+                            'Average word length',
+                            'Unique word count',
+                            'N-grams',
+                            'Topic modelling',
+                            'Wordcloud',
+                            'Sentiment',
+                            'NER',
+                            'POS',
+                            'Complexity Scores')
+            )
+            # final step
+            download=st.button('Click here to download clean data')
+            if download:
+                  df_download= pd.DataFrame(data)
+                  #df_download
+                  csv = df_download.to_csv(index=False)
+                  b64 = base64.b64encode(csv.encode()).decode()  # some strings
+                  linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
+                  st.markdown(linko, unsafe_allow_html=True)
               
     
     st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
