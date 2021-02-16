@@ -295,10 +295,10 @@ try:
               'Download Started!'
               df_download= pd.DataFrame(data)
               #df_download.columns=[text_column]
-              df_download
+              #df_download
               csv = df_download.to_csv(index=False)
               b64 = base64.b64encode(csv.encode()).decode()  # some strings
-              linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
+              linko= f'<a href="data:file/csv;base64,{b64}" download="clean_data.csv">Download csv file</a>'
               st.markdown(linko, unsafe_allow_html=True)
               
     
