@@ -75,6 +75,7 @@ numexpr==2.7.1
 numpy==1.20.0rc1
 packaging==20.8
 pandas==1.1.5
+pandas-profiling
 pandocfilters==1.4.3
 parso==0.7.1
 pickleshare==0.7.5

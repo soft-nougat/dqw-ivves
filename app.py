@@ -12,8 +12,9 @@ import streamlit as st
 import pandas as pd
 import base64
 import SessionState
-# Load the LDA model from gensim
 import preprocessor as pp
+from pandas_profiling import ProfileReport
+import streamlit.components.v1 as components
 
 # ----------------------------------------------
 # session state
@@ -40,6 +41,7 @@ ss = SessionState.get(output_df = pd.DataFrame(),
     clean_text = None,
     ldamodel = None,
     topics_df = None)
+
 
 # set background, use base64 to read local file
 def get_base64_of_bin_file(bin_file):
@@ -196,18 +198,44 @@ def check_input_method(data_input_mthd):
     
     return df,ss.txt
 
-# app setup 
-try:
     
-    # set bg
-    set_png_as_page_bg('dqw_background.png')
+def structured_data_app():
     
-    # hide warning for st.pyplot() deprecation
-    st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.write("Welcome to the DQW for structured data analysis. ",
+                  "Structured data analysis is an important step ",
+                  "in AI model development or Data Analysis. This app ",
+                  "offers visualisation of descriptive statistics of a ",
+                  "csv input file by using the pandas profiling package.")
     
-    # Main panel setup
-    display_app_header(main_txt='Data Quality Wrapper',
-                       sub_txt='Clean, describe, visualise and select data for AI models')
+    # Side panel setup
+    # Step 1 includes Uploading 
+    display_app_header(main_txt = "Step 1",
+                      sub_txt= "Upload data",
+                      is_sidebar=True)
+        
+    data_input_mthd = st.sidebar.radio("Select Data Input Method",
+                                       ('Upload a CSV file',
+                                        'Upload a json file'))
+
+    st.subheader('Choose data to analyse :alembic:')
+    data,txt  = check_input_method(data_input_mthd)
+  
+    st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
+    st.write(data.head(5))
+    
+    profile = ProfileReport(data, title='Your input data profile report', 
+                            explorative=True)
+    
+    profile.to_file("your_report.html")
+    
+    # display html page in streamlit
+    # open file and decode it, then serve
+    display = open("your_report.html", 'r', encoding='utf-8')
+    source_code = display.read() 
+    components.html(source_code, height = 800, scrolling=True) 
+    
+    
+def text_data_app():
     
     st.write("Welcome to the DQW for Text analysis. ",
                  "As unstructured data, text input analysis for ",
@@ -242,7 +270,6 @@ try:
     
     # clean data #######
     if clean_data_opt=='Skip preprocessing':
-        
             st.subheader('Using Raw data :cut_of_meat:')  #Raw data header
             
             display_app_header(main_txt = "Step 2",
@@ -268,37 +295,36 @@ try:
                 ss.to_encode = True
     else:
             st.subheader('Using Clean Data :droplet:')  #Clean data header
-            data = pp.clean_data(data,feature=text_column)
+            ss.df = pp.clean_data(data,feature=text_column)
             st.success('Data cleaning successfuly done')
             ss.to_encode = True
     
-            display_app_header(main_txt = "Step 2",
-                       sub_txt= "Analyse data",
-                       is_sidebar=True)
+    if clean_data_opt=='Run preprocessing':
+        display_app_header(main_txt = "Step 2",
+                   sub_txt= "Analyse data",
+                   is_sidebar=True)
             
-            selected_plot = st.sidebar.radio(
-            "Choose 1 plot", ('Length of text', 
-                            'Word count',
-                            'Average word length',
-                            'Unique word count',
-                            'N-grams',
-                            'Topic modelling',
-                            'Wordcloud',
-                            'Sentiment',
-                            'NER',
-                            'POS',
-                            'Complexity Scores')
-            )
-            # final step
-            download=st.button('Click here to download clean data')
-            if download:
-              'Download Started!'
+        selected_plot = st.sidebar.radio(
+        "Choose 1 plot", ('Length of text', 
+                        'Word count',
+                        'Average word length',
+                        'Unique word count',
+                        'N-grams',
+                        'Topic modelling',
+                        'Wordcloud',
+                        'Sentiment',
+                        'NER',
+                        'POS',
+                        'Complexity Scores')
+        )
+        # final step
+        download=st.button('Click here to download clean data')
+        if download:
               df_download= pd.DataFrame(data)
-              #df_download.columns=[text_column]
               #df_download
               csv = df_download.to_csv(index=False)
               b64 = base64.b64encode(csv.encode()).decode()  # some strings
-              linko= f'<a href="data:file/csv;base64,{b64}" download="clean_data.csv">Download csv file</a>'
+              linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
               st.markdown(linko, unsafe_allow_html=True)
               
     
@@ -308,6 +334,35 @@ try:
     plots.plot(selected_plot,
                data,
                text_column)
+    
+
+# app setup 
+try:
+    
+    # set bg
+    set_png_as_page_bg('dqw_background.png')
+    
+    # hide warning for st.pyplot() deprecation
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    
+    # Main panel setup
+    display_app_header(main_txt='Data Quality Wrapper',
+                       sub_txt='Clean, describe, visualise and select data for AI models')
+    
+    # prompt the user with an option to select which data they want to 
+    # analyse
+    selected_structure = st.selectbox("Choose data structure to analyse", 
+                                      ("Structured data", 
+                                       "Unstructured, text data"))
+    
+    if selected_structure == "Structured data":
+        
+        structured_data_app()
+        
+    elif selected_structure == "Unstructured, text data":
+        
+        text_data_app()
+    
 
 except KeyError:
     st.error("Please select a key value from the dropdown to continue.")
@@ -317,5 +372,3 @@ except ValueError:
     
 except TypeError:
      st.error("Oops, something went wrong. Please check previous steps for inconsistent input.")
-    
-
