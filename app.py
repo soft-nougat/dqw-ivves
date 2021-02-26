@@ -198,7 +198,6 @@ def check_input_method(data_input_mthd):
     
     return df,ss.txt
 
-    
 def structured_data_app():
     
     st.write("Welcome to the DQW for structured data analysis. ",
@@ -223,17 +222,10 @@ def structured_data_app():
     st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
     st.write(data.head(5))
     
-    profile = ProfileReport(data, title='Your input data profile report', 
-                            explorative=True)
-    
-    profile.to_file("your_report.html")
+    profile = ProfileReport(data, title='Your input data profile report').to_html()
     
     # display html page in streamlit
-    # open file and decode it, then serve
-    display = open("your_report.html", 'r', encoding='utf-8')
-    source_code = display.read() 
-    components.html(source_code, height = 800, scrolling=True) 
-    
+    components.html(profile, height = 800, scrolling=True) 
     
 def text_data_app():
     
