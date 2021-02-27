@@ -12,8 +12,9 @@ import streamlit as st
 import pandas as pd
 import base64
 import SessionState
+# Load the LDA model from gensim
 import preprocessor as pp
-from pandas_profiling import ProfileReport
+import sweetviz as sv
 import streamlit.components.v1 as components
 
 # ----------------------------------------------
@@ -204,7 +205,7 @@ def structured_data_app():
                   "Structured data analysis is an important step ",
                   "in AI model development or Data Analysis. This app ",
                   "offers visualisation of descriptive statistics of a ",
-                  "csv input file by using the pandas profiling package.")
+                  "csv input file by using the sweetviz package.")
     
     # Side panel setup
     # Step 1 includes Uploading 
@@ -219,13 +220,19 @@ def structured_data_app():
     st.subheader('Choose data to analyse :alembic:')
     data,txt  = check_input_method(data_input_mthd)
   
-    st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
+    st.subheader('A preview of input data is below, please wait for data to be analyzed :bar_chart:')
     st.write(data.head(5))
     
-    profile = ProfileReport(data, title='Your input data profile report').to_html()
+    my_report = sv.analyze(data)
     
+    my_report.show_html(layout='vertical',
+                        open_browser=False)
+    
+    #profile = ProfileReport(data, title='Your input data profile report').to_html()
+    display = open("SWEETVIZ_REPORT.html", 'r', encoding='utf-8')
+    source_code = display.read() 
     # display html page in streamlit
-    components.html(profile, height = 800, scrolling=True) 
+    components.html(source_code, height = 600, scrolling=True) 
     
 def text_data_app():
     

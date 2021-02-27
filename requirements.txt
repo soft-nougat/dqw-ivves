@@ -75,7 +75,6 @@ numexpr==2.7.1
 numpy==1.20.0rc1
 packaging==20.8
 pandas==1.1.5
-pandas-profiling
 pandocfilters==1.4.3
 parso==0.7.1
 pickleshare==0.7.5
@@ -115,6 +114,7 @@ smmap==3.0.4
 spacy==2.3.5
 srsly==1.0.5
 streamlit==0.73.1
+sweetviz
 terminado==0.9.1
 testpath==0.4.4
 textblob==0.15.3
