@@ -205,7 +205,8 @@ def structured_data_app():
                   "Structured data analysis is an important step ",
                   "in AI model development or Data Analysis. This app ",
                   "offers visualisation of descriptive statistics of a ",
-                  "csv input file by using the sweetviz package.")
+                  "csv input file by using the sweetviz package.",
+                  " You can pick to analyse only 1 file or compare 2.")
     
     # Side panel setup
     # Step 1 includes Uploading 
@@ -216,23 +217,61 @@ def structured_data_app():
     data_input_mthd = st.sidebar.radio("Select Data Input Method",
                                        ('Upload a CSV file',
                                         'Upload a json file'))
-
-    st.subheader('Choose data to analyse :alembic:')
-    data,txt  = check_input_method(data_input_mthd)
-  
-    st.subheader('A preview of input data is below, please wait for data to be analyzed :bar_chart:')
-    st.write(data.head(5))
     
-    my_report = sv.analyze(data)
+    selected_structure = st.selectbox("Choose type of analysis", 
+                                      ("Analyse 1 file", 
+                                       "Compare 2 files"))
     
-    my_report.show_html(layout='vertical',
-                        open_browser=False)
     
-    #profile = ProfileReport(data, title='Your input data profile report').to_html()
-    display = open("SWEETVIZ_REPORT.html", 'r', encoding='utf-8')
-    source_code = display.read() 
-    # display html page in streamlit
-    components.html(source_code, height = 600, scrolling=True) 
+    if selected_structure == "Compare 2 files":
+        
+        st.subheader('Choose data to analyse :alembic:')
+        
+        uploaded_files = st.file_uploader("Upload CSVs to compare", 
+                                          type="csv", 
+                                          accept_multiple_files=True)
+        
+        data = []
+        for file in uploaded_files:
+        	dataframe = pd.read_csv(file)
+        	file.seek(0)
+        	data.append(dataframe)
+        
+        st.subheader('A preview of input files is below, please wait for data to be compared :bar_chart:')
+        st.write(data[0].head(5))
+        st.write(data[1].head(5))
+        
+        my_report = sv.compare([data[0], "Input file 1"], [data[1], "Input file 2"])
+        
+        my_report.show_html(layout='vertical',
+                            open_browser=False)
+        
+        #profile = ProfileReport(data, title='Your input data profile report').to_html()
+        display = open("SWEETVIZ_REPORT.html", 'r', encoding='utf-8')
+        source_code = display.read() 
+        # display html page in streamlit
+        components.html(source_code, height = 600, scrolling=True) 
+    
+    if selected_structure == "Analyse 1 file":
+        
+        st.subheader('Choose data to analyse :alembic:')
+        data,txt  = check_input_method(data_input_mthd)
+        
+        st.subheader('A preview of input data is below, please wait for data to be analyzed :bar_chart:')
+        st.write(data.head(5))
+        
+        my_report = sv.analyze(data)
+        
+        my_report.show_html(layout='vertical',
+                            open_browser=False)
+        
+        #profile = ProfileReport(data, title='Your input data profile report').to_html()
+        display = open("SWEETVIZ_REPORT.html", 'r', encoding='utf-8')
+        source_code = display.read() 
+        # display html page in streamlit
+        components.html(source_code, height = 600, scrolling=True) 
+    
+    
     
 def text_data_app():
     
