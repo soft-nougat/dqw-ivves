@@ -244,7 +244,7 @@ def structured_data_app():
         my_report = sv.compare([data[0], "Input file 1"], [data[1], "Input file 2"])
         
         my_report.show_html(layout='vertical',
-                            open_browser=False)
+                            open_browser=True)
         
         #profile = ProfileReport(data, title='Your input data profile report').to_html()
         display = open("SWEETVIZ_REPORT.html", 'r', encoding='utf-8')
@@ -263,7 +263,7 @@ def structured_data_app():
         my_report = sv.analyze(data)
         
         my_report.show_html(layout='vertical',
-                            open_browser=False)
+                            open_browser=True)
         
         #profile = ProfileReport(data, title='Your input data profile report').to_html()
         display = open("SWEETVIZ_REPORT.html", 'r', encoding='utf-8')
