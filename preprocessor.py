@@ -85,19 +85,22 @@ def lemmatize_verbs(words):
     return lemmas
 
 def normalize(words):
+    
+    words = BeautifulSoup(words, 'html.parser').get_text()
+    words = re.findall(r',"text":"(.*?)."', words)
     words = remove_non_ascii(words)
     #words = to_lowercase(words)
     words = remove_punctuation(words)
     words = replace_numbers(words)
     #words = remove_stopwords(words)
-    words = BeautifulSoup(words, 'html.parser').get_text()
-    words = re.findall(r',"text":"(.*?)."', words)
+    
     return words
 
 def clean_data(df,feature):
     
+    st.write("Test1")
     df[feature] = df[feature].astype(str)
-    
+    st.write("Test2")
     """
     function to:
         1. de-noise
