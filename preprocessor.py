@@ -91,7 +91,7 @@ def normalize(words):
     words = remove_non_ascii(words)
     words = to_lowercase(words)
     words = remove_punctuation(words)
-    #words = replace_numbers(words)
+    words = replace_numbers(words)
     #words = remove_stopwords(words)
     
     return words
