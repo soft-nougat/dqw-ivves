@@ -89,9 +89,9 @@ def normalize(words):
     words = BeautifulSoup(words, 'html.parser').get_text()
     words = re.findall(r',"text":"(.*?)."', words)
     words = remove_non_ascii(words)
-    #words = to_lowercase(words)
+    words = to_lowercase(words)
     words = remove_punctuation(words)
-    words = replace_numbers(words)
+    #words = replace_numbers(words)
     #words = remove_stopwords(words)
     
     return words
@@ -127,15 +127,18 @@ def clean_data(df,feature):
         #2
         #tokens = nltk.word_tokenize(entry)
         #1a)
-        tokens = [word for word in tokens if word.isalpha()]
+        #tokens = [word for word in tokens if word.isalpha()]
         tokens = [url_pattern.sub('', w) for w in tokens]
         tokens = [email_pattern.sub('', w) for w in tokens]
+        tokens = [re.sub('\\n', '', w) for w in tokens]
         #3a)
         
         #3b)
         #lemmas = lemmatize_verbs(tokens)
         doc.append(' '.join(tokens))   
                       
-    df[feature]= doc 
+    df[feature]= doc
+    
+    df.dropna()
     
     return df
