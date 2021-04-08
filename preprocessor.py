@@ -110,7 +110,6 @@ def clean_data(df,feature):
     #de-noising objects
     url_pattern = re.compile(re.compile(r'https?://\S+|www\.S+'))
     email_pattern = re.compile(re.compile(r'\S*@\S*\s?'))
-    html_pattern = re.compile(re.compile('[{"text":"<p>')
     
     #loop over the column
     doc = []
@@ -124,12 +123,11 @@ def clean_data(df,feature):
         tokens = [word for word in tokens if word.isalpha()]
         tokens = [url_pattern.sub('', w) for w in tokens]
         tokens = [email_pattern.sub('', w) for w in tokens]
-        tokens = [html_pattern.sub('', w) for w in tokens]
         #3a)
         tokens = normalize(tokens)
         #3b)
         #lemmas = lemmatize_verbs(tokens)
-        #doc.append(' '.join(lemmas))   
+        doc.append(' '.join(tokens))   
                       
     df[feature]= doc 
     
