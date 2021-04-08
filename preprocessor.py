@@ -19,6 +19,7 @@ from nltk.corpus import stopwords
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
+from bs4 import BeautifulSoup
 
 def remove_non_ascii(words):
     """Remove non-ASCII characters from list of tokenized words"""
@@ -89,6 +90,7 @@ def normalize(words):
     words = remove_punctuation(words)
     words = replace_numbers(words)
     #words = remove_stopwords(words)
+    words = BeautifulSoup(words, 'html.parser').get_text()
     return words
 
 def clean_data(df,feature):
