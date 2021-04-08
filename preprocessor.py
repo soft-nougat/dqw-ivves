@@ -98,9 +98,8 @@ def normalize(words):
 
 def clean_data(df,feature):
     
-    st.write("Test1")
     df[feature] = df[feature].astype(str)
-    st.write("Test2")
+    
     """
     function to:
         1. de-noise
@@ -139,6 +138,6 @@ def clean_data(df,feature):
                       
     df[feature]= doc
     
-    df.dropna()
+    df = df.dropna()
     
     return df
