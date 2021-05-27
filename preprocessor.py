@@ -103,7 +103,7 @@ def clean_data(df,feature):
     output: pandas dataframe
     
     """
-    df[feature] = df[feature].dropna 
+    df = df.dropna()
     #df[feature] = df[feature].astype(str) 
     
     #de-noising objects
