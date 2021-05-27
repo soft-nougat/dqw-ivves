@@ -405,8 +405,8 @@ try:
 except KeyError:
     st.error("Please select a key value from the dropdown to continue.")
     
-except ValueError:
-    st.error("Oops, something went wrong. Please check previous steps for inconsistent input.")
+#except ValueError:
+    #st.error("Oops, something went wrong. Please check previous steps for inconsistent input.")
     
-except TypeError:
-     st.error("Oops, something went wrong. Please check previous steps for inconsistent input.")
+#except TypeError:
+     #st.error("Oops, something went wrong. Please check previous steps for inconsistent input.")
