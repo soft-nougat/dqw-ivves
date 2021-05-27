@@ -87,9 +87,6 @@ def normalize(words):
     words = remove_punctuation(words)
     words = replace_numbers(words)
     words = remove_stopwords(words)
-    return words
-
-def spelling_correction(words):
     textBlb = TextBlob(words)     # Making our first textblob
     textCorrected = textBlb.correct()   # Correcting the text
     return textCorrected
@@ -116,8 +113,7 @@ def clean_data(df,feature):
     for entry in df[feature]:
         
         #1a)
-        tokens = spelling_correction(entry)
-        tokens = contractions.fix(tokens)
+        tokens = contractions.fix(entry)
         #2
         tokens = nltk.word_tokenize(entry)
         #1a)
