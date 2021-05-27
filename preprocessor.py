@@ -115,9 +115,10 @@ def clean_data(df,feature):
         #1a)
         textBlb = TextBlob(entry)     # Making our first textblob
         textCorrected = textBlb.correct()   # Correcting the text
+        
         tokens = contractions.fix(str(textCorrected))
         #2
-        tokens = nltk.word_tokenize(entry)
+        tokens = nltk.word_tokenize(tokens)
         #1a)
         tokens = [word for word in tokens if word.isalpha()]
         tokens = [url_pattern.sub('', w) for w in tokens]
