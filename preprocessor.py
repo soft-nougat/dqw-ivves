@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Created on Tue Dec 29 14:06:51 2020
-
 Preprocessor script to tokenize, stem, lemmatize, de-noise input
 https://www.kdnuggets.com/2018/03/text-data-preprocessing-walkthrough-python.html
-
 @author: TNIKOLIC
 """
 import streamlit as st
@@ -19,7 +16,6 @@ from nltk.corpus import stopwords
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
-from bs4 import BeautifulSoup
 
 def remove_non_ascii(words):
     """Remove non-ASCII characters from list of tokenized words"""
@@ -85,21 +81,14 @@ def lemmatize_verbs(words):
     return lemmas
 
 def normalize(words):
-    
-    words = BeautifulSoup(words, 'html.parser').get_text()
-    words = re.findall(r',"text":"(.*?)."', words)
     words = remove_non_ascii(words)
     words = to_lowercase(words)
     words = remove_punctuation(words)
     words = replace_numbers(words)
-    #words = remove_stopwords(words)
-    
+    words = remove_stopwords(words)
     return words
 
 def clean_data(df,feature):
-    
-    df[feature] = df[feature].astype(str)
-    
     """
     function to:
         1. de-noise
@@ -121,23 +110,19 @@ def clean_data(df,feature):
     for entry in df[feature]:
         
         #1a)
-        tokens = normalize(entry)
-        #tokens = contractions.fix(entry)
+        tokens = contractions.fix(entry)
         #2
-        #tokens = nltk.word_tokenize(entry)
+        tokens = nltk.word_tokenize(entry)
         #1a)
-        #tokens = [word for word in tokens if word.isalpha()]
+        tokens = [word for word in tokens if word.isalpha()]
         tokens = [url_pattern.sub('', w) for w in tokens]
         tokens = [email_pattern.sub('', w) for w in tokens]
-        tokens = [re.sub('\\n', '', w) for w in tokens]
         #3a)
-        
+        tokens = normalize(tokens)
         #3b)
-        #lemmas = lemmatize_verbs(tokens)
-        doc.append(' '.join(tokens))   
+        lemmas = lemmatize_verbs(tokens)
+        doc.append(' '.join(lemmas))   
                       
-    df[feature]= doc
-    
-    df = df.dropna()
+    df[feature]= doc 
     
     return df
