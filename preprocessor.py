@@ -87,8 +87,11 @@ def normalize(words):
     words = remove_punctuation(words)
     words = replace_numbers(words)
     words = remove_stopwords(words)
+    
+    words = words.astype(str) 
     textBlb = TextBlob(words)     # Making our first textblob
     textCorrected = textBlb.correct()   # Correcting the text
+    
     return textCorrected
     
 def clean_data(df,feature):
@@ -104,7 +107,6 @@ def clean_data(df,feature):
     
     """
     df = df.dropna()
-    #df[feature] = df[feature].astype(str) 
     
     #de-noising objects
     url_pattern = re.compile(re.compile(r'https?://\S+|www\.S+'))
