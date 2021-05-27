@@ -358,7 +358,7 @@ def text_data_app():
         # final step
         download=st.button('Click here to download clean data')
         if download:
-              df_download= pd.DataFrame(data)
+              df_download= pd.DataFrame(ss.df)
               #df_download
               csv = df_download.to_csv(index=False)
               b64 = base64.b64encode(csv.encode()).decode()  # some strings
@@ -367,10 +367,10 @@ def text_data_app():
               
     
     st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
-    st.write(data.head(5))
+    st.write(ss.df.head(5))
     
     plots.plot(selected_plot,
-               data,
+               ss.df,
                text_column)
     
 
