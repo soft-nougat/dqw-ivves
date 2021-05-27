@@ -13,6 +13,7 @@ import contractions
 import inflect
 from nltk.stem import LancasterStemmer, WordNetLemmatizer
 from nltk.corpus import stopwords
+from textblob import TextBlob
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -88,6 +89,11 @@ def normalize(words):
     words = remove_stopwords(words)
     return words
 
+def spelling_correction(words):
+    textBlb = TextBlob(words)     # Making our first textblob
+    textCorrected = textBlb.correct()   # Correcting the text
+    return textCorrected
+    
 def clean_data(df,feature):
     """
     function to:
@@ -119,6 +125,7 @@ def clean_data(df,feature):
         tokens = [email_pattern.sub('', w) for w in tokens]
         #3a)
         tokens = normalize(tokens)
+        tokens = spelling_correction(tokens)
         #3b)
         lemmas = lemmatize_verbs(tokens)
         doc.append(' '.join(lemmas))   
