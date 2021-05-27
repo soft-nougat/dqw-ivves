@@ -115,7 +115,7 @@ def clean_data(df,feature):
         #1a)
         textBlb = TextBlob(entry)     # Making our first textblob
         textCorrected = textBlb.correct()   # Correcting the text
-        tokens = contractions.fix(textCorrected)
+        tokens = contractions.fix(str(textCorrected))
         #2
         tokens = nltk.word_tokenize(entry)
         #1a)
