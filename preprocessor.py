@@ -88,11 +88,7 @@ def normalize(words):
     words = replace_numbers(words)
     words = remove_stopwords(words)
     
-    words = words.astype(str) 
-    textBlb = TextBlob(words)     # Making our first textblob
-    textCorrected = textBlb.correct()   # Correcting the text
-    
-    return textCorrected
+    return words
     
 def clean_data(df,feature):
     """
@@ -117,7 +113,9 @@ def clean_data(df,feature):
     for entry in df[feature]:
         
         #1a)
-        tokens = contractions.fix(entry)
+        textBlb = TextBlob(entry)     # Making our first textblob
+        textCorrected = textBlb.correct()   # Correcting the text
+        tokens = contractions.fix(textCorrected)
         #2
         tokens = nltk.word_tokenize(entry)
         #1a)
