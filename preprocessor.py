@@ -103,6 +103,8 @@ def clean_data(df,feature):
     output: pandas dataframe
     
     """
+    df[feature] = df[feature].dropna 
+    df[feature] = df[feature].astype(str) 
     
     #de-noising objects
     url_pattern = re.compile(re.compile(r'https?://\S+|www\.S+'))
