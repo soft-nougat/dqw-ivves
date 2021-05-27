@@ -116,7 +116,8 @@ def clean_data(df,feature):
     for entry in df[feature]:
         
         #1a)
-        tokens = contractions.fix(entry)
+        tokens = spelling_correction(entry)
+        tokens = contractions.fix(tokens)
         #2
         tokens = nltk.word_tokenize(entry)
         #1a)
@@ -125,7 +126,6 @@ def clean_data(df,feature):
         tokens = [email_pattern.sub('', w) for w in tokens]
         #3a)
         tokens = normalize(tokens)
-        tokens = spelling_correction(tokens)
         #3b)
         lemmas = lemmatize_verbs(tokens)
         doc.append(' '.join(lemmas))   
