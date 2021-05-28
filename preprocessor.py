@@ -97,8 +97,9 @@ def clean_data(df,feature):
             a) remove email and other symbols
         2. tokenize
         3. normalize
-            a) remove stopwords
-            b) lemmatize
+            a) remove stopwords with NLTK
+            b) fix typos with wordnet
+            c) lemmatize with NLTK
     output: pandas dataframe
     
     """
@@ -120,7 +121,6 @@ def clean_data(df,feature):
         #2
         tokens = nltk.word_tokenize(tokens)
         #1a)
-        tokens = [word for word in tokens if word.isalpha()]
         tokens = [url_pattern.sub('', w) for w in tokens]
         tokens = [email_pattern.sub('', w) for w in tokens]
         #3a)
