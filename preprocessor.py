@@ -100,6 +100,7 @@ def clean_data(df,feature):
             a) remove stopwords with NLTK
             b) fix typos with wordnet
             c) lemmatize with NLTK
+            d) replace numbers with words 
     output: pandas dataframe
     
     """

@@ -334,7 +334,13 @@ def text_data_app():
     else:
             st.subheader('Using Clean Data :droplet:')  #Clean data header
             data = pp.clean_data(data,feature=text_column)
-            st.success('Data cleaning successfuly done')
+            st.write('Data cleaning successfuly done! ',
+                     'This is what the DQW did: ',
+                     '1. De-noise data'
+                         'a) ')
+            
+            
+            
             ss.to_encode = True
     
     if clean_data_opt=='Run preprocessing':
