@@ -16,6 +16,7 @@ import SessionState
 import preprocessor as pp
 import sweetviz as sv
 import streamlit.components.v1 as components
+from PIL import Image
 
 # ----------------------------------------------
 # session state
@@ -334,11 +335,10 @@ def text_data_app():
     else:
             st.subheader('Using Clean Data :droplet:')  #Clean data header
             data = pp.clean_data(data,feature=text_column)
-            st.write('Data cleaning successfuly done! ',
-                     'This is what the DQW did: ',
-                     '1. De-noise data'
-                         'a) ')
+            st.success('Data cleaning successfuly done!')
             
+            image = Image.open('pp.png')
+            st.image(image, caption='Preprocessing steps done by DQW')
             
             
             ss.to_encode = True
