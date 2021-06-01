@@ -23,26 +23,27 @@ from PIL import Image
 # needs to be refined, session state is used to
 # successfully cache objects so the app runs
 # smoothly
-ss = SessionState.get(output_df = pd.DataFrame(), 
-    df_raw = pd.DataFrame(),
-    _model=None,
-    text_col='text',
-    is_file_uploaded=False,
-    id2word = None, 
-    corpus= None,
-    is_valid_text_feat = False,
-    to_clean_data = False,
-    to_encode = False,
-    to_train = False,
-    to_evaluate = False,
-    to_visualize = False,
-    to_download_report = False,
-    df = pd.DataFrame(),
-    txt = 'Paste the text to analyze here',
-    default_txt = 'Paste the text to analyze here',
-    clean_text = None,
-    ldamodel = None,
-    topics_df = None)
+ss = SessionState.get(selected_structure = None,
+                     output_df = pd.DataFrame(), 
+                     df_raw = pd.DataFrame(),
+                     _model=None,
+                     text_col='text',
+                     is_file_uploaded=False,
+                     id2word = None, 
+                     corpus= None,
+                     is_valid_text_feat = False,
+                     to_clean_data = False,
+                     to_encode = False,
+                     to_train = False,
+                     to_evaluate = False,
+                     to_visualize = False,
+                     to_download_report = False,
+                     df = pd.DataFrame(),
+                     txt = 'Paste the text to analyze here',
+                     default_txt = 'Paste the text to analyze here',
+                     clean_text = None,
+                     ldamodel = None,
+                     topics_df = None)
 
 
 # set background, use base64 to read local file
@@ -187,19 +188,19 @@ def check_input_method(data_input_mthd):
                              ss_text= ss.txt,
                              is_batch=True)
         if df.shape[0]>0:
-            # ss.is_batch_process = True
+            ss.is_batch_process = True
             ss.is_file_uploaded = True
     elif 'json' in data_input_mthd:
         df,ss.txt= get_input(data_input_mthd,
                              ss_text= ss.txt,
                              is_batch=True)
         if df.shape[0]>0:
-            # ss.is_batch_process = True
+            ss.is_batch_process = True
             ss.is_file_uploaded = True
         
-    
     return df,ss.txt
 
+@st.cache()
 def structured_data_app():
     
     st.write("Welcome to the DQW for structured data analysis. ",
@@ -273,7 +274,7 @@ def structured_data_app():
         components.html(source_code, height = 600, scrolling=True) 
     
     
-    
+@st.cache()
 def text_data_app():
     
     st.write("Welcome to the DQW for Text analysis. ",
@@ -331,7 +332,7 @@ def text_data_app():
             )
             
             if ss.text_col != ss.default_txt:
-                ss.to_encode = True
+               ss.to_encode = True
     else:
             st.subheader('Using Clean Data :droplet:')  #Clean data header
             data = pp.clean_data(data,feature=text_column)
@@ -339,7 +340,6 @@ def text_data_app():
             
             image = Image.open('pp.png')
             st.image(image, caption='Preprocessing steps done by DQW')
-            
             
             ss.to_encode = True
     
