@@ -200,7 +200,7 @@ def check_input_method(data_input_mthd):
         
     return df,ss.txt
 
-@st.cache()
+
 def structured_data_app():
     
     st.write("Welcome to the DQW for structured data analysis. ",
@@ -273,8 +273,7 @@ def structured_data_app():
         # display html page in streamlit
         components.html(source_code, height = 600, scrolling=True) 
     
-    
-@st.cache()
+
 def text_data_app():
     
     st.write("Welcome to the DQW for Text analysis. ",
