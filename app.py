@@ -12,11 +12,13 @@ import streamlit as st
 import pandas as pd
 import base64
 import SessionState
-# Load the LDA model from gensim
 import preprocessor as pp
 import sweetviz as sv
 import streamlit.components.v1 as components
 from PIL import Image
+import pandas_profiling
+from streamlit_pandas_profiling import st_profile_report
+from te import *
 
 # ----------------------------------------------
 # session state
@@ -43,7 +45,8 @@ ss = SessionState.get(selected_structure = None,
                      default_txt = 'Paste the text to analyze here',
                      clean_text = None,
                      ldamodel = None,
-                     topics_df = None)
+                     topics_df = None,
+                     table_evaluator = None)
 
 
 # set background, use base64 to read local file
@@ -204,74 +207,77 @@ def check_input_method(data_input_mthd):
 def structured_data_app():
     
     st.write("Welcome to the DQW for structured data analysis. ",
-                  "Structured data analysis is an important step ",
-                  "in AI model development or Data Analysis. This app ",
-                  "offers visualisation of descriptive statistics of a ",
-                  "csv input file by using the sweetviz package.",
-                  " You can pick to analyse only 1 file or compare 2.")
-    
-    # Side panel setup
-    # Step 1 includes Uploading 
-    display_app_header(main_txt = "Step 1",
-                      sub_txt= "Upload data",
-                      is_sidebar=True)
-        
-    data_input_mthd = st.sidebar.radio("Select Data Input Method",
-                                       ('Upload a CSV file',
-                                        'Upload a json file'))
+            "Structured data analysis is an important step ",
+            "in AI model development or Data Analysis. This app ",
+            "offers visualisation of descriptive statistics of a ",
+            "csv input file by using the pandas profiling package.",
+            " You can pick to analyse only 1 file or compare 2.",
+            " The app uses the table-evaluator package to compare ",
+            "2 tables.")
     
     selected_structure = st.selectbox("Choose type of analysis", 
                                       ("Analyse 1 file", 
                                        "Compare 2 files"))
     
-    
+    st.subheader('Choose data to analyse :alembic:')
+
     if selected_structure == "Compare 2 files":
         
-        st.subheader('Choose data to analyse :alembic:')
-        
-        uploaded_files = st.file_uploader("Upload CSVs to compare", 
-                                          type="csv", 
-                                          accept_multiple_files=True)
-        
-        data = []
-        for file in uploaded_files:
-        	dataframe = pd.read_csv(file)
-        	file.seek(0)
-        	data.append(dataframe)
-        
-        st.subheader('A preview of input files is below, please wait for data to be compared :bar_chart:')
-        st.write(data[0].head(5))
-        st.write(data[1].head(5))
-        
-        my_report = sv.compare([data[0], "Input file 1"], [data[1], "Input file 2"])
-        
-        my_report.show_html(layout='vertical',
-                            open_browser=True)
-        
-        #profile = ProfileReport(data, title='Your input data profile report').to_html()
-        display = open("SWEETVIZ_REPORT.html", 'r', encoding='utf-8')
-        source_code = display.read() 
-        # display html page in streamlit
-        components.html(source_code, height = 600, scrolling=True) 
+
+        original = st.file_uploader("Upload reference dataset", 
+                                type="csv")
+
+        if original:
+
+            original = pd.read_csv(original)                        
+
+            comparison = st.file_uploader("Upload comparison dataset", 
+                                         type="csv") 
+
+            if comparison:                      
+            
+                comparison = pd.read_csv(comparison)
+
+                st.subheader('A preview of input files is below, please wait for data to be compared :bar_chart:')
+                st.subheader('Reference data')
+                st.write(original.head(5))
+                st.subheader('Comparison data')
+                st.write(comparison.head(5))
+
+                ss.table_evaluator = TableEvaluator(original, comparison)
+                ss.table_evaluator.visual_evaluation()
+                
+                dataset_columns = original.columns
+                options_columns = dataset_columns.insert(0, 'None')
+                
+                evaluate_col = st.selectbox('Select a categorical column to analyse:', 
+                                            options_columns, 
+                                            index=0)
+
+                if evaluate_col is not 'None':
+                    
+                    evaluate = ss.table_evaluator.evaluate(target_col = evaluate_col)
+
+                else:
+
+                    st.warning('Please select a categorical column to analyse.')
+
+        else:
+
+            st.warning("Please upload a reference/original dataset.")
     
     if selected_structure == "Analyse 1 file":
         
-        st.subheader('Choose data to analyse :alembic:')
-        data,txt  = check_input_method(data_input_mthd)
-        
-        st.subheader('A preview of input data is below, please wait for data to be analyzed :bar_chart:')
-        st.write(data.head(5))
-        
-        my_report = sv.analyze(data)
-        
-        my_report.show_html(layout='vertical',
-                            open_browser=True)
-        
-        #profile = ProfileReport(data, title='Your input data profile report').to_html()
-        display = open("SWEETVIZ_REPORT.html", 'r', encoding='utf-8')
-        source_code = display.read() 
-        # display html page in streamlit
-        components.html(source_code, height = 600, scrolling=True) 
+        data = st.file_uploader("Upload dataset", 
+                                type="csv") 
+    
+        if data:
+            st.subheader('A preview of input data is below, please wait for data to be analyzed :bar_chart:')
+            data = pd.read_csv(data)
+            st.write(data.head(5))
+            
+            pr = data.profile_report()
+            st_profile_report(pr)
     
 
 def text_data_app():
