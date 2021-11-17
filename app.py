@@ -13,7 +13,6 @@ import pandas as pd
 import base64
 import SessionState
 import preprocessor as pp
-import sweetviz as sv
 import streamlit.components.v1 as components
 from PIL import Image
 import pandas_profiling
