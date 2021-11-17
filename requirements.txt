@@ -72,7 +72,7 @@ nbconvert==6.0.7
 nbformat==5.0.8
 nest-asyncio==1.4.3
 nltk==3.5
-notebook==6.1.5
+notebook==6.4.1
 numexpr==2.7.1
 numpy==1.20.0rc1
 packaging==20.8
