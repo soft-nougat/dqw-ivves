@@ -108,8 +108,6 @@ def text_data_app():
                             'Complexity Scores')
             )
             
-            if ss.text_col != ss.default_txt:
-               ss.to_encode = True
     else:
             st.subheader('Using Clean Data :droplet:')  #Clean data header
             data = pp.clean_data(data,feature=text_column)
@@ -122,8 +120,8 @@ def text_data_app():
     
     if clean_data_opt=='Run preprocessing':
         display_app_header(main_txt = "Step 2",
-                   sub_txt= "Analyse data",
-                   is_sidebar=True)
+                          sub_txt= "Analyse data",
+                          is_sidebar=True)
             
         selected_plot = st.sidebar.radio(
         "Choose 1 plot", ('Length of text', 
