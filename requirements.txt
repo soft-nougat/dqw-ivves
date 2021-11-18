@@ -2,7 +2,7 @@ table_evaluator
 streamlit-pandas-profiling
 streamlit==0.73.1
 Pillow>=8.1.1
-nltk==3.5
+nltk
 contractions==0.0.48
 inflect
 BeautifulSoup4
