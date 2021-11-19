@@ -8,6 +8,36 @@ Script with defined app, including styling.
 """
 
 import streamlit as st
+import SessionState
+import pandas as pd
+
+# ----------------------------------------------
+# session state
+# needs to be refined, session state is used to
+# successfully cache objects so the app runs
+# smoothly
+ss = SessionState.get(selected_structure = None,
+                     output_df = pd.DataFrame(), 
+                     df_raw = pd.DataFrame(),
+                     _model=None,
+                     text_col='text',
+                     is_file_uploaded=False,
+                     id2word = None, 
+                     corpus= None,
+                     is_valid_text_feat = False,
+                     to_clean_data = False,
+                     to_encode = False,
+                     to_train = False,
+                     to_evaluate = False,
+                     to_visualize = False,
+                     to_download_report = False,
+                     df = pd.DataFrame(),
+                     txt = 'Paste the text to analyze here',
+                     default_txt = 'Paste the text to analyze here',
+                     clean_text = None,
+                     ldamodel = None,
+                     topics_df = None,
+                     table_evaluator = None)
     
 # app setup 
 try:

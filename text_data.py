@@ -84,70 +84,57 @@ def text_data_app():
     clean_data_opt = st.sidebar.radio("Choose wisely",
                                       ('Skip preprocessing', 
                                        'Run preprocessing'))
+
+    display_app_header(main_txt = "Step 2",
+                   sub_txt= "Analyse data",
+                   is_sidebar=True)
+            
+    selected_plot = st.sidebar.radio(
+    "Choose 1 plot", ('Length of text', 
+                    'Word count',
+                    'Average word length',
+                    'Stopwords',
+                    'Unique word count',
+                    'N-grams',
+                    'Topic modelling',
+                    'Wordcloud',
+                    'Sentiment',
+                    'NER',
+                    'POS',
+                    'Complexity Scores')
+    )
     
     # clean data #######
     if clean_data_opt=='Skip preprocessing':
             st.subheader('Using Raw data :cut_of_meat:')  #Raw data header
             
-            display_app_header(main_txt = "Step 2",
-                   sub_txt= "Analyse data",
-                   is_sidebar=True)
-            
-            selected_plot = st.sidebar.radio(
-            "Choose 1 plot", ('Length of text', 
-                            'Word count',
-                            'Average word length',
-                            'Stopwords',
-                            'Unique word count',
-                            'N-grams',
-                            'Topic modelling',
-                            'Wordcloud',
-                            'Sentiment',
-                            'NER',
-                            'POS',
-                            'Complexity Scores')
-            )
-            
     else:
             st.subheader('Using Clean Data :droplet:')  #Clean data header
+
+            st.subheader('A preview of input data is below, please wait until it is cleaned.')
+            st.write(data.head(5))
+
             data = pp.clean_data(data,feature=text_column)
+
             st.success('Data cleaning successfuly done!')
             
-            image = Image.open('pp.png')
-            st.image(image, caption='Preprocessing steps done by DQW')
+            #image = Image.open('pp.png')
+            #st.image(image, caption='Preprocessing steps done by DQW')
             
             ss.to_encode = True
-    
-    if clean_data_opt=='Run preprocessing':
-        display_app_header(main_txt = "Step 2",
-                          sub_txt= "Analyse data",
-                          is_sidebar=True)
-            
-        selected_plot = st.sidebar.radio(
-        "Choose 1 plot", ('Length of text', 
-                        'Word count',
-                        'Average word length',
-                        'Unique word count',
-                        'N-grams',
-                        'Topic modelling',
-                        'Wordcloud',
-                        'Sentiment',
-                        'NER',
-                        'POS',
-                        'Complexity Scores')
-        )
-        # final step
-        download=st.button('Click here to download clean data')
-        if download:
-              df_download= pd.DataFrame(data)
-              #df_download
-              csv = df_download.to_csv(index=False)
-              b64 = base64.b64encode(csv.encode()).decode()  # some strings
-              linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
-              st.markdown(linko, unsafe_allow_html=True)
-              
-    
-    st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
+
+            # final step
+            download=st.button('Click here to download clean data')
+            if download:
+                df_download= pd.DataFrame(data)
+                #df_download
+                csv = df_download.to_csv(index=False)
+                b64 = base64.b64encode(csv.encode()).decode()  # some strings
+                linko= f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
+                st.markdown(linko, unsafe_allow_html=True)
+        
+    # continue with the analysis 
+    st.subheader('A preview of input data for analysis is below, please select plot to start :bar_chart:')
     st.write(data.head(5))
     
     plots.plot(selected_plot,
