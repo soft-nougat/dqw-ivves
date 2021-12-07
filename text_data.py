@@ -36,7 +36,8 @@ ss = SessionState.get(selected_structure = None,
                      default_txt = 'Paste the text to analyze here',
                      clean_text = None,
                      ldamodel = None,
-                     topics_df = None)
+                     topics_df = None,
+                     language = 'English')
 
 
 def select_text_feature(df) -> pd.DataFrame :
@@ -72,6 +73,11 @@ def text_data_app():
                                        ('Copy-Paste text', 
                                         'Upload a CSV file',
                                         'Import a json file'))
+
+    language = st.sidebar.radio("Select document language",
+                                ('English', 
+                                'Dutch',
+                                'Mixed'))
     
     st.subheader('Choose data to analyse :alembic:')
     data,txt  = check_input_method(data_input_mthd)

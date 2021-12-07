@@ -16,17 +16,23 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.stem import LancasterStemmer, WordNetLemmatizer
 from nltk.corpus import stopwords
 from textblob import TextBlob
+import spacy
 #nltk.download('wordnet')
 #nltk.download('stopwords')
 #nltk.download('punkt')
 from bs4 import BeautifulSoup
+import SessionState
+
+ss = SessionState.get(language = 'English')
 
 def remove_html(words):
+    # language agnostic
     soup = BeautifulSoup(words, 'lxml')
     clean_words = soup.get_text()
     return clean_words
 
 def remove_non_ascii(words):
+    # language agnostic
     """Remove non-ASCII characters from list of tokenized words"""
     new_words = [unicodedata.normalize('NFKD', w).encode('ascii', 'ignore').decode('utf-8', 'ignore') for w in words]
     #for word in words:
@@ -35,6 +41,7 @@ def remove_non_ascii(words):
     return new_words
 
 def to_lowercase(words):
+    # language agnostic
     """Convert all characters to lowercase from list of tokenized words"""
     new_words = [word.lower() for word in words]
     #new_words = []
@@ -44,6 +51,7 @@ def to_lowercase(words):
     return new_words
 
 def remove_punctuation(words):
+    # language agnostic
     """Remove punctuation from list of tokenized words"""
     new_words = [re.sub(r'[^\w\s]', '', word) for word in words]
     #new_words = []
@@ -54,6 +62,7 @@ def remove_punctuation(words):
     return new_words
 
 def replace_numbers(words):
+    # specific to english
     """Replace all interger occurrences in list of tokenized words with textual representation"""
     p = inflect.engine()
     new_words = []
@@ -65,9 +74,16 @@ def replace_numbers(words):
             new_words.append(word)
     return new_words
 
-def remove_stopwords(words):
-    """Remove stop words from list of tokenized words"""
-    new_words = [w for w in words if w not in stopwords.words('english')]
+def remove_stopwords(words, language):
+    """Remove stop words from list of tokenized words, 
+    pass lowercase words since spacy looks at uppercase
+    as entities"""
+    if language == 'English':
+        new_words = [w for w in words if w not in stopwords.words('english')]
+    elif language == 'Dutch':
+        new_words = [w for w in words if w not in stopwords.words('dutch')]
+    elif language == 'Mixed':
+        new_words = [w for w in words if w not in stopwords.words('english')]
     #new_words = []
     #for word in words:
         #if word not in stopwords.words('english'):
@@ -110,12 +126,20 @@ def normalize(words):
     
     words = to_lowercase(words)
     
-    #words = remove_punctuation(words) no need for this since we tokenize with regx
+    words = remove_punctuation(words)
     words = replace_numbers(words)
    
-    words = remove_stopwords(words)
+    #words = remove_stopwords(words)
     
     return words
+
+def lemmatizer(texts, nlp):
+    texts = [text.replace("\n", "").strip() for text in texts]
+    docs = nlp.pipe(texts)
+    stopword_list = stopwords.words('dutch') + ['coronavirus','covid','corona']
+    cleaned_lemmas = [[t.lemma_ for t in doc if t.lemma_ not in stopword_list] for doc in docs]
+
+    return docs
     
 def clean_data(df,feature):
     """
@@ -130,18 +154,39 @@ def clean_data(df,feature):
     output: pandas dataframe
     
     """
+    nlp = spacy.load("xx_ent_wiki_sm")
+    
     df = df.dropna()
     st.write('0')
     # use lambda function to run through rows (entries)
     df[feature] = df[feature].apply(lambda x: contractions.fix(str(x)))
     st.write('1')
-    tokenizer = RegexpTokenizer(r'\w+')
-    df[feature] = df[feature].apply(lambda x: tokenizer.tokenize(x)) # nltk word_tokenize too slow for pandas df
+    
+    # convert the column to a document
+    text = str(df[feature])
     st.write('2')
-    df[feature] = df[feature].apply(lambda x: normalize(x))
+    doc = nlp(text)
     st.write('3')
-    df[feature] = df[feature].apply(lambda x: lemmatize_verbs(x))
+    doc = normalize(text)
     st.write('4')
+    doc = lemmatizer(doc, nlp)
+    st.write('5')
+
+    for entry in doc:
+        # Do something with the doc here
+        print([(ent.text, ent.label_) for ent in entry.ents])
+
+        # https://spacy.io/usage/processing-pipelines
+
+    #tokenizer = RegexpTokenizer(r'\w+')
+    #df[feature] = df[feature].apply(lambda x: tokenizer.tokenize(x)) # nltk word_tokenize too slow for pandas df
+    
+    #df[feature] = df[feature].apply(lambda x: normalize(x))
+    # tokenize
+    
+    #st.write('3')
+    #df[feature] = df[feature].apply(lambda x: lemmatize_verbs(x))
+    #st.write('4')
 
     #doc = []
     #for entry in df[feature]:
