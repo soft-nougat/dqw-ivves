@@ -20,3 +20,10 @@ Welcome to the DQW for Text analysis. This repo contains the DQW streamlit app f
 3.	Latest releases
 
     Use app.py
+
+# Structured data 
+
+# Unstructured data - text
+
+# Unstructured data - audio
+
