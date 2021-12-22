@@ -22,3 +22,4 @@ librosa
 audiomentations
 pydub
 dtw
+libsndfile1-dev
