@@ -18,3 +18,7 @@ scipy==1.5.4
 numpy==1.20.0rc1
 wordcloud==1.8.1
 tqdm==4.54.1
+librosa
+audiomentations
+pydub
+dtw
