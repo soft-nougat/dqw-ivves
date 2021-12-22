@@ -11,7 +11,7 @@ Welcome to the DQW for Text analysis. This repo contains the DQW streamlit app f
     
     Run pip install -r requirements.txt
     
-    Run streamlit v02.py to launch app
+    Run streamlit app.py to launch app
 
 2.	Software dependencies:
 
@@ -19,10 +19,11 @@ Welcome to the DQW for Text analysis. This repo contains the DQW streamlit app f
 
 3.	Latest releases
 
-    Use v02.py
+    Use app.py
 
 # Structured data 
 
 # Unstructured data - text
 
 # Unstructured data - audio
+
