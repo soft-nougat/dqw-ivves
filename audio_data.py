@@ -455,10 +455,10 @@ def audio_data_app():
                 st.audio(comparison, format="audio/wav", start_time=0)
                 
                 which_comparison = st.sidebar.radio("Please pick a comparison method",
-                                                    ("Spectogram",
+                                                    ("Spectrum Compare",
                                                     "DTW"))
 
-                if which_comparison == "Spectogram":
+                if which_comparison == "Spectrum Compare":
                     audiocompare(reference, comparison)
                 else:
                     compare_files(reference, comparison)
