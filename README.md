@@ -27,3 +27,6 @@ Welcome to the DQW for Text analysis. This repo contains the DQW streamlit app f
 
 # Unstructured data - audio
 
+https://github.com/QED0711/audio_analyzer
+
+
