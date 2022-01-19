@@ -2,10 +2,10 @@
 # unstructured, text data analysis
 
 import json
-import plots
+import text_eda.plots
 import streamlit as st
 import pandas as pd
-import preprocessor as pp
+import text_eda.preprocessor as pp
 import streamlit.components.v1 as components
 from PIL import Image
 from helper_functions import *
