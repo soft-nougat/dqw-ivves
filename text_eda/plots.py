@@ -7,13 +7,13 @@ It also holds plot descriptions in the app.
 
 @author: TNIKOLIC
 """
-import pos
-import ner
-import polarity
+import text_eda.pos
+import text_eda.ner
+import text_eda.polarity
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt 
-import lda
+import text_eda.lda
 # download english stopwords
 import nltk
 from nltk.corpus import stopwords
