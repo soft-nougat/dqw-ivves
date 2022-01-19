@@ -17,8 +17,8 @@ from sklearn.exceptions import ConvergenceWarning
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.linear_model import Lasso, Ridge, ElasticNet, LogisticRegression
 from dython.nominal import compute_associations, numerical_encoding
-from viz import *
-from metrics import *
+from tabular_eda.viz import *
+from tabular_eda.metrics import *
 import streamlit as st
 
 def write_text(text):

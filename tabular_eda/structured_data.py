@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit.components.v1 as components
 import pandas_profiling
 from streamlit_pandas_profiling import st_profile_report
-from te import *
+from tabular_eda.te import *
 import SessionState
 
 # ----------------------------------------------
