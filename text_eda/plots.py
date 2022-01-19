@@ -7,13 +7,13 @@ It also holds plot descriptions in the app.
 
 @author: TNIKOLIC
 """
-import text_eda.pos
-import text_eda.ner
-import text_eda.polarity
+import text_eda.pos as pos
+import text_eda.ner as ner
+import text_eda.polarity as polarity
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt 
-import text_eda.lda
+import text_eda.lda as lda
 # download english stopwords
 import nltk
 from nltk.corpus import stopwords
@@ -251,34 +251,36 @@ def plot(selected_plot,
         
         option = st.multiselect('Would you like to find an optimal number of topics according to your input?',
                                ('Yes', 'No'))
+
+        if option:
         
-        if 'Yes' in option:
+            if 'Yes' in option:
+                
+                topics = lda.main_function_optimal(data[text_column])
+                
+                
+            elif 'No' in option:
+                
+                topics = st.number_input('Select number of topics to generate',
+                                        min_value = 1, format = '%i')
+                    
+                topics = int(topics)
+                
+                lda.main_function(data[text_column], topics)
             
-            topics = lda.main_function_optimal(data[text_column])
-            
-            
-        elif 'No' in option:
-            
-            topics = st.number_input('Select number of topics to generate',
-                                     min_value = 1, format = '%i')
-                 
-            topics = int(topics)
-            
-            lda.main_function(data[text_column], topics)
-            
-        st.write("This dashbard firstly offers the LDA topic visualisation plot.",
-                 "On the left side, the area of each circle ",
-                 "represents the importance of the topic relative to the ",
-                 "corpus. ",
-                 "The distance between the center of the circles indicates ",
-                 "the similarity between the topics. ",
-                 "On the right side, the histogram of each topic shows the ",
-                 "top 30 relevant words.")
+            st.write("This dashbard firstly offers the LDA topic visualisation plot.",
+                    "On the left side, the area of each circle ",
+                    "represents the importance of the topic relative to the ",
+                    "corpus. ",
+                    "The distance between the center of the circles indicates ",
+                    "the similarity between the topics. ",
+                    "On the right side, the histogram of each topic shows the ",
+                    "top 30 relevant words.")
         
-        
-        st.write("Secondly, the dashboard displays word importance in each topic.")
-        
-        lda.word_importance(topics)
+
+            st.write("Secondly, the dashboard displays word importance in each topic.")
+            
+            lda.word_importance(topics)
         
         
     elif "Wordcloud" in plots:
@@ -332,9 +334,11 @@ def plot(selected_plot,
         
         selected_entity = st.multiselect("Choose entity to quantify", 
                                 (list(ent)))
+
+        if selected_entity:
         
-        ner.plot_most_common_named_entity_barchart(data[text_column], entity =
-                                                   selected_entity[0])
+            ner.plot_most_common_named_entity_barchart(data[text_column], entity =
+                                                    selected_entity[0])
         
     elif "POS" in plots:
         
@@ -352,9 +356,11 @@ def plot(selected_plot,
         
         selected_pos = st.multiselect("Choose tag to quantify", 
                                 (list(pos_1)))
+
+        if selected_pos:
         
-        pos.plot_most_common_part_of_speech_barchart(data[text_column],
-                                                  selected_pos[0])
+            pos.plot_most_common_part_of_speech_barchart(data[text_column],
+                                                    selected_pos[0])
     
     elif 'Complexity' in plots:
         

@@ -2,7 +2,7 @@
 # unstructured, text data analysis
 
 import json
-import text_eda.plots
+import text_eda.plots as plots 
 import streamlit as st
 import pandas as pd
 import text_eda.preprocessor as pp
