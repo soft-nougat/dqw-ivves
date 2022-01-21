@@ -15,7 +15,7 @@ try:
     from helper_functions import *
     
     # set bg
-    set_png_as_page_bg('dqw_background.png')
+    set_bg_hack('dqw_background.png')
     
     # hide warning for st.pyplot() deprecation
     st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -33,18 +33,18 @@ try:
     
     if selected_structure == "Structured data":
         
-        from structured_data import *
+        from tabular_eda.structured_data import *
         structured_data_app()
         
     elif selected_structure == "Unstructured, text data":
         
-        from text_data import *
+        from text_eda.text_data import *
         text_data_app()
 
         
     elif selected_structure == "Unstructured, audio data":
         
-        from audio_data import *
+        from audio_eda.audio_data import *
         audio_data_app()
     
 
