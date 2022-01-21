@@ -20,7 +20,7 @@ def set_bg_hack(main_bg):
     st.markdown(
          f"""
          <style>
-         .reportview-container {{
+         .stApp {{
              background: url(data:image/{main_bg_ext};base64,{base64.b64encode(open(main_bg, "rb").read()).decode()});
              background-size: cover;
          }}
@@ -49,7 +49,7 @@ def set_png_as_page_bg(png_file):
     bin_str = get_base64_of_bin_file(png_file)
     page_bg_img = '''
     <style>
-    body {
+    st.App {
     background-image: url("data:image/png;base64,%s");
     background-size: cover;
     }
