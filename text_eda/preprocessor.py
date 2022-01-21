@@ -17,6 +17,7 @@ from textblob import TextBlob
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
+nltk.download('omw-1.4')
 
 def remove_non_ascii(words):
     """Remove non-ASCII characters from list of tokenized words"""
