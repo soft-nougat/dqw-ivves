@@ -9,35 +9,6 @@ import text_eda.preprocessor as pp
 import streamlit.components.v1 as components
 from PIL import Image
 from helper_functions import *
-import SessionState
-
-# ----------------------------------------------
-# session state
-# needs to be refined, session state is used to
-# successfully cache objects so the app runs
-# smoothly
-ss = SessionState.get(selected_structure = None,
-                     output_df = pd.DataFrame(), 
-                     df_raw = pd.DataFrame(),
-                     _model=None,
-                     text_col='text',
-                     is_file_uploaded=False,
-                     id2word = None, 
-                     corpus= None,
-                     is_valid_text_feat = False,
-                     to_clean_data = False,
-                     to_encode = False,
-                     to_train = False,
-                     to_evaluate = False,
-                     to_visualize = False,
-                     to_download_report = False,
-                     df = pd.DataFrame(),
-                     txt = 'Paste the text to analyze here',
-                     default_txt = 'Paste the text to analyze here',
-                     clean_text = None,
-                     ldamodel = None,
-                     topics_df = None)
-
 
 def select_text_feature(df) -> pd.DataFrame :
     """
@@ -113,10 +84,8 @@ def text_data_app():
             data = pp.clean_data(data,feature=text_column)
             st.success('Data cleaning successfuly done!')
             
-            image = Image.open('pp.png')
+            image = Image.open("text_eda/pp.png")
             st.image(image, caption='Preprocessing steps done by DQW')
-            
-            ss.to_encode = True
     
     if clean_data_opt=='Run preprocessing':
         display_app_header(main_txt = "Step 2",
