@@ -22,3 +22,4 @@ tqdm==4.54.1
 audiomentations
 pydub
 dtw
+textstat
