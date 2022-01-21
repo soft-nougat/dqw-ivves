@@ -5,17 +5,7 @@ import base64
 import SessionState
 import streamlit.components.v1 as components
 from PIL import Image
-import SessionState
 import pandas as pd
-
-# ----------------------------------------------
-# session state
-# needs to be refined, session state is used to
-# successfully cache objects so the app runs
-# smoothly
-ss = SessionState.get(is_file_uploaded=False,
-                     is_batch_process = False,
-                     txt = 'Paste the text to analyze here')
 
 def set_bg_hack(main_bg):
     '''
@@ -158,25 +148,30 @@ def check_input_method(data_input_mthd):
     ----------
     data_input_mthd: str -> the default displayed text for decision making
     """
+    # ----------------------------------------------
+    # session state init
+    st.session_state['is_file_uploaded'] = False
+    st.session_state['is_batch_process'] = False
+    st.session_state['txt'] = 'Paste the text to analyze here'
 
     if 'Copy-Paste text' in data_input_mthd:
-        df,ss.txt = get_input(data_input_mthd,
-                              ss_text= ss.txt)
+        df, st.session_state.txt = get_input(data_input_mthd,
+                                            ss_text= st.session_state.txt)
 
 
     elif 'CSV' in data_input_mthd:
-        df,ss.txt= get_input(data_input_mthd,
-                             ss_text= ss.txt,
-                             is_batch=True)
+        df,st.session_state.txt= get_input(data_input_mthd,
+                                        ss_text= st.session_state.txt,
+                                        is_batch=True)
         if df.shape[0]>0:
-            ss.is_batch_process = True
-            ss.is_file_uploaded = True
+            st.session_state.is_batch_process = True
+            st.session_state.is_file_uploaded = True
     elif 'json' in data_input_mthd:
-        df,ss.txt= get_input(data_input_mthd,
-                             ss_text= ss.txt,
+        df,st.session_state.txt= get_input(data_input_mthd,
+                             ss_text= st.session_state.txt,
                              is_batch=True)
         if df.shape[0]>0:
-            ss.is_batch_process = True
-            ss.is_file_uploaded = True
+            st.session_state.is_batch_process = True
+            st.session_state.is_file_uploaded = True
         
-    return df,ss.txt
+    return df,st.session_state.txt

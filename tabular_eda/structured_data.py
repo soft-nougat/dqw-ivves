@@ -7,14 +7,6 @@ import streamlit.components.v1 as components
 import pandas_profiling
 from streamlit_pandas_profiling import st_profile_report
 from tabular_eda.te import *
-import SessionState
-
-# ----------------------------------------------
-# session state
-# needs to be refined, session state is used to
-# successfully cache objects so the app runs
-# smoothly
-ss = SessionState.get(table_evaluator = None)
 
 def structured_data_app():
     
@@ -56,8 +48,12 @@ def structured_data_app():
                 st.subheader('Comparison data')
                 st.write(comparison.head(5))
 
-                ss.table_evaluator = TableEvaluator(original, comparison)
-                ss.table_evaluator.visual_evaluation()
+                # ----------------------------------------------
+                # session state
+                st.session_state['table_evaluator'] = None
+
+                st.session_state.table_evaluator = TableEvaluator(original, comparison)
+                st.session_state.table_evaluator.visual_evaluation()
                 
                 dataset_columns = original.columns
                 options_columns = dataset_columns.insert(0, 'None')
@@ -68,7 +64,7 @@ def structured_data_app():
 
                 if evaluate_col != 'None':
                     
-                    evaluate = ss.table_evaluator.evaluate(target_col = evaluate_col)
+                    evaluate = st.session_state.table_evaluator.evaluate(target_col = evaluate_col)
 
                 else:
 
