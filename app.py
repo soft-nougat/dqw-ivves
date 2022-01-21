@@ -15,7 +15,7 @@ try:
     from helper_functions import *
     
     # set bg
-    set_png_as_page_bg('dqw_background.png')
+    set_bg_hack('dqw_background.png')
     
     # hide warning for st.pyplot() deprecation
     st.set_option('deprecation.showPyplotGlobalUse', False)
