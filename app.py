@@ -29,7 +29,8 @@ try:
     selected_structure = st.selectbox("Choose data structure to analyse", 
                                       ("Structured data", 
                                        "Unstructured, text data",
-                                       "Unstructured, audio data"))
+                                       "Unstructured, audio data",
+                                       "Unstructured, image data"))
     
     if selected_structure == "Structured data":
         
@@ -41,11 +42,15 @@ try:
         from text_eda.text_data import *
         text_data_app()
 
-        
     elif selected_structure == "Unstructured, audio data":
         
         from audio_eda.audio_data import *
         audio_data_app()
+    
+    elif selected_structure == "Unstructured, image data":
+        
+        from image_eda.image_data import *
+        image_data_app()
     
 
 except KeyError:
