@@ -6,6 +6,12 @@ import streamlit.components.v1 as components
 from PIL import Image
 import pandas as pd
 
+import io
+from PIL import Image
+from pprint import pprint
+from zipfile import ZipFile
+from image_eda.augment import apply_augmentations
+
 def set_bg_hack(main_bg):
     '''
     A function to unpack an image from root folder and set as bg.
@@ -174,3 +180,66 @@ def check_input_method(data_input_mthd):
             st.session_state.is_file_uploaded = True
         
     return df,st.session_state.txt
+
+def load_images():
+
+    data = st.sidebar.file_uploader("Upload image dataset", 
+                                    type=['png', 'jpg', 'jpeg'],
+                                    accept_multiple_files=True) 
+
+    if data:
+        images = []
+        augmentations = get_augmentations()
+        for image_file in data:
+            file_details = {"None": None, "File name":image_file.name, "File type":image_file.type, "File size":image_file.size}
+            image = Image.open(image_file)
+            images.append((file_details, image))
+
+        images = apply_augmentations(images, augmentations)
+        return images
+
+def _get_default_augmentations() -> dict:
+    augmentations = {
+        'resize': {
+            'width': None,
+            'height': None
+        },
+        'grayscale': False,
+        'contrast': {'value':None},
+        'brightness': {'value':None},
+        'sharpness': {'value':None},
+        'color': {'value':None},
+        'denoise': False,
+    }
+    return augmentations
+
+def get_augmentations() -> dict:
+    if 'augmentations' not in st.session_state:
+        st.session_state.augmentations = _get_default_augmentations()
+    return st.session_state.augmentations
+
+def update_augmentations(augmentations) -> None:
+    st.session_state.augmentations = augmentations
+
+def _file_process_in_memory(images):
+    """ Converts PIL image objects into BytesIO in-memory bytes buffers. """
+    new_images = []
+    for image_name, pil_image in images:
+        file_object = io.BytesIO()
+        pil_image.save(file_object, "PNG")
+        pil_image.close()
+        new_images.append((image_name, file_object))
+
+    return new_images
+
+def export(images):
+    images = _file_process_in_memory(images)
+
+    # Create an in-memory zip file from the in-memory image file data.
+    zip_file_bytes_io = io.BytesIO()
+
+    with ZipFile(zip_file_bytes_io, 'w') as zip_file:
+        for image_name, bytes_stream in images:
+            zip_file.writestr(image_name["File name"]+".png", bytes_stream.getvalue())
+        name = st.sidebar.text_input("File name", value="My augmented dataset")
+        st.sidebar.download_button('Download Zip', zip_file_bytes_io.getvalue(), file_name=f'{name}.zip')
