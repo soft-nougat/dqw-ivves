@@ -23,4 +23,4 @@ audiomentations
 pydub
 dtw
 textstat
-cv2
+opencv-python-headless
