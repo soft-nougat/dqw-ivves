@@ -7,6 +7,7 @@ import streamlit.components.v1 as components
 import pandas_profiling
 from streamlit_pandas_profiling import st_profile_report
 from tabular_eda.te import *
+from helper_functions import display_app_header
 
 def structured_data_app():
     
@@ -18,25 +19,31 @@ def structured_data_app():
             " You can pick to analyse only 1 file or compare 2.",
             " The app uses the table-evaluator package to compare ",
             "2 tables.")
-    
-    selected_structure = st.selectbox("Choose type of analysis", 
-                                      ("Analyse 1 file", 
-                                       "Compare 2 files"))
-    
-    st.subheader('Choose data to analyse :alembic:')
+
+    # Side panel setup
+    display_app_header(main_txt = "Step 1",
+                       sub_txt= "Choose type of analysis",
+                       is_sidebar=True)
+
+    selected_structure = st.sidebar.selectbox("", 
+                                                ("Analyse 1 file", 
+                                                "Compare 2 files"))
 
     if selected_structure == "Compare 2 files":
         
+        display_app_header(main_txt = "Step 2",
+                            sub_txt= "Upload data",
+                            is_sidebar=True)
 
-        original = st.file_uploader("Upload reference dataset", 
-                                type="csv")
+        original = st.sidebar.file_uploader("Upload reference dataset", 
+                                            type="csv")
 
         if original:
 
             original = pd.read_csv(original)                        
 
-            comparison = st.file_uploader("Upload comparison dataset", 
-                                         type="csv") 
+            comparison = st.sidebar.file_uploader("Upload comparison dataset", 
+                                                  type="csv") 
 
             if comparison:                      
             
@@ -72,11 +79,15 @@ def structured_data_app():
 
         else:
 
-            st.warning("Please upload a reference/original dataset.")
+            st.sidebar.warning("Please upload a reference/original dataset.")
     
     if selected_structure == "Analyse 1 file":
+
+        display_app_header(main_txt = "Step 2",
+                            sub_txt= "Upload data",
+                            is_sidebar=True)
         
-        data = st.file_uploader("Upload dataset", 
+        data = st.sidebar.file_uploader("Upload dataset", 
                                 type="csv") 
     
         if data:

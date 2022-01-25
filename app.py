@@ -8,14 +8,42 @@ Script with defined app, including styling.
 """
 
 import streamlit as st
+from PIL import Image
     
 # app setup 
 try:
 
     from helper_functions import *
+
+    # Set website details
+    st.set_page_config(page_title ="Data Quality Wrapper", 
+                       page_icon='📊', 
+                       layout='centered')
+    
+    # set sidebar width
+    st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
+        width: 300px;
+    }
+    [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
+        width: 300px;
+        margin-left: -300px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
     
     # set bg
     set_bg_hack('dqw_background.png')
+
+    # get logo
+    logo = Image.open('logo.png')
+    st.sidebar.image(logo, 
+                        use_column_width=True)
     
     # hide warning for st.pyplot() deprecation
     st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -43,11 +71,12 @@ try:
         text_data_app()
 
     elif selected_structure == "Unstructured, audio data":
-        
+
         from audio_eda.audio_data import *
         audio_data_app()
     
     elif selected_structure == "Unstructured, image data":
+        
         
         from image_eda.image_data import *
         image_data_app()
