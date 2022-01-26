@@ -1,6 +1,7 @@
 # this script contans structured data
 # analysis code
 
+#from os import preadv
 import streamlit as st
 import pandas as pd
 import streamlit.components.v1 as components
@@ -8,6 +9,8 @@ import pandas_profiling
 from streamlit_pandas_profiling import st_profile_report
 from tabular_eda.te import *
 from helper_functions import display_app_header
+import pdfkit as pdf
+
 
 def structured_data_app():
     
@@ -83,6 +86,10 @@ def structured_data_app():
     
     if selected_structure == "Analyse 1 file":
 
+         # ----------------------------------------------
+        # session state
+        st.session_state['pr'] = None
+
         display_app_header(main_txt = "Step 2",
                             sub_txt= "Upload data",
                             is_sidebar=True)
@@ -95,5 +102,25 @@ def structured_data_app():
             data = pd.read_csv(data)
             st.write(data.head(5))
             
-            pr = data.profile_report()
+            # generate a report and save it 
+            st.session_state['pr'] = data.profile_report()
+            pr = st.session_state['pr']
             st_profile_report(pr)
+            pr.to_file("pandas_prof.html")
+
+            # create a pdf file
+            pdf_report = pdf.from_file("pandas_prof.html")
+
+            # option to download in app
+            display_app_header(main_txt = "Step 3",
+                                sub_txt= "Download report",
+                                is_sidebar=True)
+
+            st.sidebar.download_button(
+                 "⬇️",
+                data=pdf_report,
+                file_name="pandas_profiling_dqw.pdf"
+            )
+            
+
+           
