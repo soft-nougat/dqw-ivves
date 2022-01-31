@@ -102,6 +102,7 @@ class TableEvaluator:
         """
         plot_mean_std(self.reference, self.comparison)
 
+
     def plot_cumsums(self, nr_cols=4):
         """
         Plot the cumulative sums for all columns in the reference and comparison dataset. 
@@ -130,9 +131,6 @@ class TableEvaluator:
             cdf(r, f, col, 'Cumsum', ax=axes[i])
             st.pyplot()
         #plot = plt.tight_layout(rect=[0, 0.02, 1, 0.98])
-
-        
-    
 
     def plot_distributions(self, nr_cols=3):
         """
@@ -184,6 +182,7 @@ class TableEvaluator:
                       .pipe((sns.barplot, "data"), x=x, y=y, hue=hue, ax=axes[i], saturation=0.8, palette=palette))
                 ax.set_xticklabels(axes[i].get_xticklabels(), rotation='vertical')
         plt.tight_layout(rect=[0, 0.02, 1, 0.98])
+        plt.savefig('pdf_files/distributions.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
         st.pyplot()
 
     def plot_correlation_difference(self, plot_diff=True, **kwargs):
@@ -244,6 +243,7 @@ class TableEvaluator:
         ax[0].set_title('reference data')
         ax[1].set_title('comparison data')
 
+        plt.savefig('pdf_files/pca.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
         st.pyplot()
 
     def get_copies(self, return_len: bool = False) -> Union[pd.DataFrame, int]:
@@ -368,12 +368,16 @@ class TableEvaluator:
         """
         Plot all visual evaluation metrics. Includes plotting the mean and standard deviation, cumulative sums, correlation differences and the PCA transform.
         :param kwargs: any kwargs for matplotlib.
+
+        Edit: retrun plots to pass to st.ss for caching
         """
-        self.plot_mean_std()
+        mean_std = self.plot_mean_std()
         #self.plot_cumsums() -- doesn't work in streamlit...
-        self.plot_distributions()
-        self.plot_correlation_difference(**kwargs)
-        self.plot_pca()
+        distributions = self.plot_distributions()
+        corr_diff = self.plot_correlation_difference(**kwargs)
+        pca_plot = self.plot_pca()
+
+        return(mean_std, distributions, corr_diff, pca_plot)
 
     def statistical_evaluation(self) -> float:
         """

@@ -24,3 +24,5 @@ pydub
 dtw
 textstat
 opencv-python-headless
+fpdf
+pdfkit
