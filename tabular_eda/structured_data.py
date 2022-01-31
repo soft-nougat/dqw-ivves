@@ -13,8 +13,8 @@ from fpdf import FPDF
 import io
 
 # remove before commiting
-path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-config = pdf.configuration(wkhtmltopdf=path_wkhtmltopdf)
+#path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+#config = pdf.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
 def structured_data_app():
 
@@ -168,7 +168,7 @@ def create_pdf_html(html, header_text, file_name):
     Funstion to create a pdf from an html file
     """
     # create a pdf file
-    pdf_report = pdf.from_file(html, configuration = config)
+    pdf_report = pdf.from_file(html)
 
     # option to download in app
     display_app_header(main_txt = header_text,
