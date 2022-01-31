@@ -1,1 +1,2 @@
+wkhtmltopdf
 libsndfile1-dev
