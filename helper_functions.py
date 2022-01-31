@@ -243,3 +243,18 @@ def export(images):
             zip_file.writestr(image_name["File name"]+".png", bytes_stream.getvalue())
         name = st.sidebar.text_input("File name", value="My augmented dataset")
         st.sidebar.download_button('Download Zip', zip_file_bytes_io.getvalue(), file_name=f'{name}.zip')
+
+def generate_zip_structured(original, comparison):
+    """ A function to write files to disk and zip 'em """
+    original.to_csv('pdf_files/reference_file_dqw.csv', 
+               index=False)
+    comparison.to_csv('pdf_files/comparison_file_dqw.csv', 
+               index=False)
+    # create a ZipFile object
+    zipObj = ZipFile('pdf_files/report_files_dqw.zip', 'w')
+    # Add multiple files to the zip
+    zipObj.write('pdf_files/reference_file_dqw.csv')
+    zipObj.write('pdf_files/comparison_file_dqw.csv')
+    zipObj.write('pdf_files/table-evaluator_comparison_dqw.pdf')
+    # close the Zip File
+    zipObj.close()

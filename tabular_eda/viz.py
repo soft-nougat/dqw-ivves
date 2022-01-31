@@ -55,14 +55,14 @@ def plot_correlation_difference(reference: pd.DataFrame, comparison: pd.DataFram
     assert isinstance(reference, pd.DataFrame), f'`reference` parameters must be a Pandas DataFrame'
     assert isinstance(comparison, pd.DataFrame), f'`comparison` parameters must be a Pandas DataFrame'
     cmap = sns.diverging_palette(220, 10, as_cmap=True)
-
+    
     if cat_cols is None:
         cat_cols = reference.select_dtypes(['object', 'category'])
     if plot_diff:
         fig, ax = plt.subplots(1, 3, figsize=(24, 7))
     else:
         fig, ax = plt.subplots(1, 2, figsize=(20, 8))
-
+  
     reference_corr = associations(reference, nominal_columns=cat_cols, plot=False, theil_u=True,
                              mark_columns=True, annot=annot, ax=ax[0], cmap=cmap)['corr']
     comparison_corr = associations(comparison, nominal_columns=cat_cols, plot=False, theil_u=True,
@@ -71,16 +71,47 @@ def plot_correlation_difference(reference: pd.DataFrame, comparison: pd.DataFram
     if plot_diff:
         diff = abs(reference_corr - comparison_corr)
         sns.set(style="white")
-        sns.heatmap(diff, ax=ax[2], cmap=cmap, vmax=.3, square=True, annot=annot, center=0,
+        sns.heatmap(diff, ax=ax[2], cmap=cmap, vmax=.3, square=True, annot=True, center=0,
                     linewidths=.5, cbar_kws={"shrink": .5}, fmt='.2f')
-
+        
     titles = ['reference', 'comparison', 'Difference'] if plot_diff else ['reference', 'comparison']
     for i, label in enumerate(titles):
         title_font = {'size': '18'}
         ax[i].set_title(label, **title_font)
+
     plt.tight_layout()
+
     st.pyplot()
 
+    export_plots(reference, comparison, diff, annot, cat_cols)
+
+
+def export_plots(reference, comparison, diff, annot, cat_cols):
+    """
+    Export heatmap plots one by one for the pdf report
+    Pass objects from plot_correlation_difference
+    """
+
+    assert isinstance(reference, pd.DataFrame), f'`reference` parameters must be a Pandas DataFrame'
+    assert isinstance(comparison, pd.DataFrame), f'`comparison` parameters must be a Pandas DataFrame'
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+
+    reference_corr = associations(reference, nominal_columns=cat_cols, plot=False, theil_u=True,
+                             mark_columns=True, annot=annot, cmap=cmap)['corr']
+    plt.tight_layout()
+    plt.savefig('pdf_files/corr_ref.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
+
+    comparison_corr = associations(comparison, nominal_columns=cat_cols, plot=False, theil_u=True,
+                             mark_columns=True, annot=annot, cmap=cmap)['corr']
+    plt.tight_layout()
+    plt.savefig('pdf_files/corr_comp.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
+
+    diff = abs(reference_corr - comparison_corr)
+    sns.set(style="white")
+    sns.heatmap(diff, cmap=cmap, vmax=.3, square=True, annot=True, center=0,
+                linewidths=.5, cbar_kws={"shrink": .5}, fmt='.2f', cbar = False)
+    plt.tight_layout()
+    plt.savefig('pdf_files/corr_diff.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0) 
 
 def plot_correlation_comparison(evaluators: List, annot=False):
     """
@@ -218,7 +249,7 @@ def plot_mean_std(reference: pd.DataFrame, comparison: pd.DataFrame, ax=None):
     ax[1].set_title('SD of reference and comparison data')
     ax[1].set_xlabel('reference data SD (log)')
     ax[1].set_ylabel('comparison data SD (log)')
-   
+    plt.savefig('pdf_files/mean_std.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
     st.pyplot()
     if ax is None:
         st.pyplot()
