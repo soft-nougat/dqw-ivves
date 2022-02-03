@@ -137,3 +137,7 @@ great_expectations
 
 # don't save experimentation script
 PyCaret.ipynb
+
+*.html
+*.csv
+*.zip
