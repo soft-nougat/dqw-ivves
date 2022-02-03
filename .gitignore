@@ -131,3 +131,9 @@ dmypy.json
 
 # Gensim saved models
 model.gensim
+
+# great expectations
+great_expectations
+
+# don't save experimentation script
+PyCaret.ipynb

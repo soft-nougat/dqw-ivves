@@ -26,3 +26,5 @@ textstat
 opencv-python-headless
 fpdf
 pdfkit
+fat-forensics
+pycaret
