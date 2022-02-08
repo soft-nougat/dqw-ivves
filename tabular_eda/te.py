@@ -182,7 +182,7 @@ class TableEvaluator:
                       .pipe((sns.barplot, "data"), x=x, y=y, hue=hue, ax=axes[i], saturation=0.8, palette=palette))
                 ax.set_xticklabels(axes[i].get_xticklabels(), rotation='vertical')
         plt.tight_layout(rect=[0, 0.02, 1, 0.98])
-        plt.savefig('pdf_files/distributions.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
+        plt.savefig('pdf_files/synthetic_data/distributions.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
         st.pyplot()
 
     def plot_correlation_difference(self, plot_diff=True, **kwargs):
@@ -243,7 +243,7 @@ class TableEvaluator:
         ax[0].set_title('reference data')
         ax[1].set_title('comparison data')
 
-        plt.savefig('pdf_files/pca.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
+        plt.savefig('pdf_files/synthetic_data/pca.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
         st.pyplot()
 
     def get_copies(self, return_len: bool = False) -> Union[pd.DataFrame, int]:
