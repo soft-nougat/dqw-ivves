@@ -141,3 +141,4 @@ PyCaret.ipynb
 *.html
 *.csv
 *.zip
+pdf_files/preprocessed_data/pycaret_pipeline.pkl

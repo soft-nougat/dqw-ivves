@@ -9,10 +9,13 @@ import streamlit.components.v1 as components
 import pandas_profiling
 from streamlit_pandas_profiling import st_profile_report
 from tabular_eda.te import *
-from helper_functions import display_app_header, generate_zip_structured, sub_text, generate_zip_pp
+from helper_functions import display_app_header, generate_zip_structured, sub_text, generate_zip_pp, open_html
 from tabular_eda.report_generation import create_pdf_html, create_pdf
 import sweetviz as sv
 import pycaret as pyc
+
+from sklearn import set_config
+from sklearn.utils import estimator_html_repr
 
 def structured_data_app():
 
@@ -283,11 +286,9 @@ def preprocess(data):
     # unsupervised
     if model == 'Unsupervised':
 
-        from pycaret.clustering import setup, get_config
+        from pycaret.clustering import setup, get_config, save_config
 
         pyc_user_methods = methods_pyc(options_columns, model)
-
-        st.write(pyc_user_methods)
 
         clf_unsup = setup(data = data, 
                           silent = True, 
@@ -309,7 +310,7 @@ def preprocess(data):
     # superivised
     elif model != 'Unsupervised':
 
-        from pycaret.classification import setup,  get_config
+        from pycaret.classification import setup,  get_config, save_config
         
         label_col = st.selectbox('Select the label column:', 
                                     options_columns, 
@@ -318,8 +319,6 @@ def preprocess(data):
         if label_col != 'None':
     
             pyc_user_methods = methods_pyc(options_columns, model)
-
-            st.write(pyc_user_methods)
 
             clf_sup = setup(data = data, 
                           silent = True, 
@@ -338,14 +337,26 @@ def preprocess(data):
                           transformation_method = pyc_user_methods[11]
                           )
 
+            # save pipeline
+            save_config("pdf_files/preprocessed_data/pycaret_pipeline.pkl")
+
+            # save html of the sklearn data pipeline
+            set_config(display = 'diagram')
+
+            pipeline = get_config('prep_pipe')
+
+            with open('prep_pipe.html', 'w') as f:  
+                f.write(estimator_html_repr(pipeline))
+
             show_pp_file(data, get_config('X'), get_config('X_train'), get_config('X_test'),
             get_config('y'), get_config('y_train'), get_config('y_test'))
     
 def show_pp_file(data, X, X_train, X_test, y = None, y_train = None, y_test = None):
     
     st.subheader("Preprocessing done! 🧼")
-
+    st.write("A preview of data and the preprocessing pipeline is below.")
     st.write(X.head())
+    open_html('prep_pipe.html', height = 400, width = 300)
 
     st.subheader("Compare files 👀")
 
@@ -489,8 +500,55 @@ def methods_pyc(columns, model):
     feat_trans, feat_trans_method])
 
 
-def detect_unfairness():
+def detect_unfairness(X, y, data, label_column):
     """  
     Use the fat-forensics package to assess fairness of data
-    """
+    Currently, only the accountability example is demoed
+
+    The logic: identify sampling bias for a data set grouping for 
+    a selected feature
     
+    Returns: a bias estimation
+    """
+    # prepare data for fat forensics, numpy array needed
+    X_fairness = X.to_numpy()
+
+    # extract the labels 
+    class_names = data[label_column].unique 
+    feature_names = X.columns
+
+    selected_feature_name = st.selectbox("Select a feature to measure the sampling bias:",
+    (feature_names))
+
+    selected_feature = np.where(feature_names == selected_feature_name)
+    selected_feature_index = int(selected_feature[0])
+
+    # Define grouping on the selected feature
+    selected_feature_grouping = [2.5, 4.75]
+
+    # Get counts, weights and names of the specified grouping
+    grp_counts, grp_weights, grp_names = fatf_dam.sampling_bias(
+        X_fairness, selected_feature_index, selected_feature_grouping)
+
+    # Print out counts per group
+    print('The counts for groups defined on "{}" feature (index {}) are:'
+        ''.format(selected_feature_name, selected_feature_index))
+    for g_name, g_count in zip(grp_names, grp_counts):
+        is_are = 'is' if g_count == 1 else 'are'
+        print('    * For the population split *{}* there {}: '
+            '{} data points.'.format(g_name, is_are, g_count))
+
+    # Get the disparity grid
+    bias_grid = fatf_dam.sampling_bias_grid_check(grp_counts)
+
+    # Print out disparity per every grouping pair
+    print('\nThe Sampling Bias for *{}* feature (index {}) grouping is:'
+        ''.format(selected_feature_name, selected_feature_index))
+    for grouping_i, grouping_name_i in enumerate(grp_names):
+        j_offset = grouping_i + 1
+        for grouping_j, grouping_name_j in enumerate(grp_names[j_offset:]):
+            grouping_j += j_offset
+            is_not = '' if bias_grid[grouping_i, grouping_j] else ' no'
+
+            print('    * For "{}" and "{}" groupings there >is{}< Sampling Bias.'
+                ''.format(grouping_name_i, grouping_name_j, is_not))

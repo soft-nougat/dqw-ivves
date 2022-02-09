@@ -312,3 +312,12 @@ def sub_text(text):
     
     st.markdown(html_temp, unsafe_allow_html = True)
     
+def open_html(file_name, height, width):
+
+    """
+    Open a local html file with streamlit components
+    """
+
+    pipe = open(file_name, 'r', encoding='utf-8')
+    source_code = pipe.read() 
+    components.html(source_code, height = height, width = width, scrolling=True)
