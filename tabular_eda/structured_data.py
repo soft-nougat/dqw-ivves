@@ -316,7 +316,7 @@ def preprocess(data):
         with open('prep_pipe.html', 'w') as f:  
             f.write(estimator_html_repr(pipeline))
 
-        show_pp_file(data, get_config('X'), get_config('X_train'), get_config('X_test'))
+        show_pp_file(data, get_config('X'))
 
     # superivised
     elif model != 'Unsupervised':
@@ -362,7 +362,7 @@ def preprocess(data):
             show_pp_file(data, get_config('X'), get_config('X_train'), get_config('X_test'),
             get_config('y'), get_config('y_train'), get_config('y_test'))
     
-def show_pp_file(data, X, X_train, X_test, y = None, y_train = None, y_test = None):
+def show_pp_file(data, X, X_train = None, X_test = None, y = None, y_train = None, y_test = None):
     
     st.subheader("Preprocessing done! 🧼")
     st.write("A preview of data and the preprocessing pipeline is below.")
@@ -371,16 +371,21 @@ def show_pp_file(data, X, X_train, X_test, y = None, y_train = None, y_test = No
 
     st.subheader("Compare files 👀")
 
-    compare_type = st.selectbox('Select which files to compare:',
-    ('Original & preprocessed', 'Train & test'))
+    if X_train is not None:
+        compare_type = st.selectbox('Select which files to compare:',
+        ('Original & preprocessed', 'Train & test'))
 
-    if compare_type == 'Original & preprocessed':
+        if compare_type == 'Original & preprocessed':
 
-        sweetviz_comparison(data, X, 1, text = "Step 4", upload = False)
-    
+            sweetviz_comparison(data, X, 1, text = "Step 4", upload = False)
+        
+        else:
+
+            sweetviz_comparison(X_train, X_test, 1, text = "Step 4", upload = False)
     else:
 
-        sweetviz_comparison(X_train, X_test, 1, text = "Step 4", upload = False)
+        st.write("Compare original and preprocessed data")
+        sweetviz_comparison(data, X, 1, text = "Step 4", upload = False)
 
     # download files
     zip = generate_zip_pp(data, X, X_train, X_test, y, y_train, y_test)
