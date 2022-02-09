@@ -27,3 +27,4 @@ opencv-python-headless
 fpdf
 pdfkit
 pycaret
+sweetviz
