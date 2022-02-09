@@ -316,7 +316,7 @@ def preprocess(data):
         with open('prep_pipe.html', 'w') as f:  
             f.write(estimator_html_repr(pipeline))
 
-        show_pp_file(data, model, get_config('X'), get_config('X_train'), get_config('X_test'))
+        show_pp_file(data, get_config('X'), get_config('X_train'), get_config('X_test'))
 
     # superivised
     elif model != 'Unsupervised':
