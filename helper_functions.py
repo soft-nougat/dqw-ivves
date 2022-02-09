@@ -280,8 +280,6 @@ def generate_zip_pp(original, X, X_train, X_test, y, y_train, y_test):
     else:
 
         X.to_csv('pdf_files/preprocessed_data/transformed_file.csv', index=False)
-        X_train.to_csv('pdf_files/preprocessed_data/x_train.csv', index=False)
-        X_test.to_csv('pdf_files/preprocessed_data/x_test.csv', index=False)
 
     # create a ZipFile object
     dirName = "pdf_files/preprocessed_data"
