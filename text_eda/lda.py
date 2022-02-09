@@ -27,7 +27,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from gensim.models import CoherenceModel
 import math
-
+from helper_functions import open_html
 
 def tokenize(text):
     lda_tokens = []
@@ -112,9 +112,7 @@ def main_function(input, NUM_TOPICS):
         
         # display html page in streamlit
         # open file and decode it, then serve
-        lda_display = open("lda_display.html", 'r', encoding='utf-8')
-        source_code = lda_display.read() 
-        components.html(source_code, height = 800, scrolling=True)    
+        open_html("lda_display.html", height = 800, width = None)
         
 def get_coherence(ldamodel,
                   corpus,

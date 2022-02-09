@@ -5,11 +5,14 @@ import base64
 import streamlit.components.v1 as components
 from PIL import Image
 import pandas as pd
+import pycaret as pyc
 
 import io
 from PIL import Image
 from pprint import pprint
 from zipfile import ZipFile
+import os
+from os.path import basename
 from image_eda.augment import apply_augmentations
 
 def set_bg_hack(main_bg):
@@ -246,15 +249,75 @@ def export(images):
 
 def generate_zip_structured(original, comparison):
     """ A function to write files to disk and zip 'em """
-    original.to_csv('pdf_files/reference_file_dqw.csv', 
+    original.to_csv('pdf_files/synthetic_data/reference_file_dqw.csv', 
                index=False)
-    comparison.to_csv('pdf_files/comparison_file_dqw.csv', 
+    comparison.to_csv('pdf_files/synthetic_data/comparison_file_dqw.csv', 
                index=False)
     # create a ZipFile object
-    zipObj = ZipFile('pdf_files/report_files_dqw.zip', 'w')
+    zipObj = ZipFile('pdf_files/synthetic_data/report_files_dqw.zip', 'w')
     # Add multiple files to the zip
-    zipObj.write('pdf_files/reference_file_dqw.csv')
-    zipObj.write('pdf_files/comparison_file_dqw.csv')
-    zipObj.write('pdf_files/table-evaluator_comparison_dqw.pdf')
+    zipObj.write('pdf_files/synthetic_data/reference_file_dqw.csv')
+    zipObj.write('pdf_files/synthetic_data/comparison_file_dqw.csv')
+    zipObj.write('pdf_files/synthetic_data/table-evaluator_comparison_dqw.pdf')
     # close the Zip File
     zipObj.close()
+
+def generate_zip_pp(original, X, X_train, X_test, y, y_train, y_test):
+    """ A function to write pycaret files to disk and zip 'em """
+
+    original.to_csv('pdf_files/preprocessed_data/original_file.csv', index=False)
+
+    if y is not None:
+        
+        X.to_csv('pdf_files/preprocessed_data/transformed_file.csv', index=False)
+        X_train.to_csv('pdf_files/preprocessed_data/x_train.csv', index=False)
+        X_test.to_csv('pdf_files/preprocessed_data/x_test.csv', index=False)
+
+        y.to_csv('pdf_files/preprocessed_data/labels.csv', index=False)
+        y_train.to_csv('pdf_files/preprocessed_data/y_train.csv', index=False)
+        y_test.to_csv('pdf_files/preprocessed_data/y_test.csv', index=False)
+
+    else:
+
+        X.to_csv('pdf_files/preprocessed_data/transformed_file.csv', index=False)
+        X_train.to_csv('pdf_files/preprocessed_data/x_train.csv', index=False)
+        X_test.to_csv('pdf_files/preprocessed_data/x_test.csv', index=False)
+
+    # create a ZipFile object
+    dirName = "pdf_files/preprocessed_data"
+    with ZipFile('pdf_files/preprocessed_data.zip', 'w') as zipObj:
+        # Iterate over all the files in directory
+        for folderName, subfolders, filenames in os.walk(dirName):
+            for filename in filenames:
+                #create complete filepath of file in directory
+                filePath = os.path.join(folderName, filename)
+                # Add file to zip
+                zipObj.write(filePath, basename(filePath))
+
+def sub_text(text):
+    '''
+    A function to neatly display text in app.
+    Parameters
+    ----------
+    text : Just plain text.
+    Returns
+    -------
+    Text defined by html5 code below.
+    '''
+    
+    html_temp = f"""
+    <p style = "color:#1F4E79; text_align:justify;"> {text} </p>
+    </div>
+    """
+    
+    st.markdown(html_temp, unsafe_allow_html = True)
+    
+def open_html(file_name, height, width):
+
+    """
+    Open a local html file with streamlit components
+    """
+
+    pipe = open(file_name, 'r', encoding='utf-8')
+    source_code = pipe.read() 
+    components.html(source_code, height = height, width = width, scrolling=True)

@@ -99,19 +99,19 @@ def export_plots(reference, comparison, diff, annot, cat_cols):
     reference_corr = associations(reference, nominal_columns=cat_cols, plot=False, theil_u=True,
                              mark_columns=True, annot=annot, cmap=cmap)['corr']
     plt.tight_layout()
-    plt.savefig('pdf_files/corr_ref.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
+    plt.savefig('pdf_files/synthetic_data/corr_ref.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
 
     comparison_corr = associations(comparison, nominal_columns=cat_cols, plot=False, theil_u=True,
                              mark_columns=True, annot=annot, cmap=cmap)['corr']
     plt.tight_layout()
-    plt.savefig('pdf_files/corr_comp.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
+    plt.savefig('pdf_files/synthetic_data/corr_comp.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
 
     diff = abs(reference_corr - comparison_corr)
     sns.set(style="white")
     sns.heatmap(diff, cmap=cmap, vmax=.3, square=True, annot=True, center=0,
                 linewidths=.5, cbar_kws={"shrink": .5}, fmt='.2f', cbar = False)
     plt.tight_layout()
-    plt.savefig('pdf_files/corr_diff.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0) 
+    plt.savefig('pdf_files/synthetic_data/corr_diff.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0) 
 
 def plot_correlation_comparison(evaluators: List, annot=False):
     """
@@ -249,7 +249,7 @@ def plot_mean_std(reference: pd.DataFrame, comparison: pd.DataFrame, ax=None):
     ax[1].set_title('SD of reference and comparison data')
     ax[1].set_xlabel('reference data SD (log)')
     ax[1].set_ylabel('comparison data SD (log)')
-    plt.savefig('pdf_files/mean_std.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
+    plt.savefig('pdf_files/synthetic_data/mean_std.png',orientation='portrait',transparent=True, bbox_inches=None, pad_inches=0)
     st.pyplot()
     if ax is None:
         st.pyplot()
