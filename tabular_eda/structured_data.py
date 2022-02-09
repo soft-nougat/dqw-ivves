@@ -305,6 +305,17 @@ def preprocess(data):
                           transformation_method = pyc_user_methods[11]
                           )
 
+         # save pipeline
+        save_config("pdf_files/preprocessed_data/pycaret_pipeline.pkl")
+
+        # save html of the sklearn data pipeline
+        set_config(display = 'diagram')
+
+        pipeline = get_config('prep_pipe')
+
+        with open('prep_pipe.html', 'w') as f:  
+            f.write(estimator_html_repr(pipeline))
+
         show_pp_file(data, model, get_config('X'), get_config('X_train'), get_config('X_test'))
 
     # superivised
