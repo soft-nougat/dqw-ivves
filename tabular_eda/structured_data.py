@@ -30,14 +30,25 @@ def structured_data_app():
     if 'data' not in st.session_state:
         st.session_state.data = None
     
-    st.write("Welcome to the DQW for structured data analysis. ",
-            "Structured data analysis is an important step ",
-            "in AI model development or Data Analysis. This app ",
-            "offers visualisation of descriptive statistics of a ",
-            "csv input file by using the pandas profiling package.",
-            " You can pick to analyse only 1 file or compare 2.",
-            " The app uses the table-evaluator package to compare ",
-            "2 tables.")
+    # the very necessary reference expander
+    intro_text = """
+    Welcome to the DQW for structured data analysis.
+    Structured data analysis is an important step 
+    in AI model development or Data Analysis. This app 
+    offers visualisation of descriptive statistics of a 
+    csv input file. 
+    <br> There are 3 options you can use: 
+    <li> - Analyse 1 file using <a href = ""> pandas-profiling </a>
+    <li> - Peprocess 1 file with <a href = "https://github.com/pycaret/pycaret"> PyCaret </a> 
+    and compare with <a href = "https://github.com/fbdesignpro/sweetviz"> Sweetviz </a> and download preprocessing pipeline
+    together with the datasets used
+    <li> - Compare 2 files with Sweetviz
+    <li> - Analyse synthetic data with <a href = "https://github.com/Baukebrenninkmeijer/table-evaluator"> table-evaluator </a> </li>
+    <br> You can download pdf files/reports at the end of each analysis.
+    """
+    intro = st.expander("Click here for more info on this app section and packages used")
+    with intro:
+        sub_text(intro_text)
 
     # Side panel setup
     display_app_header(main_txt = "Step 1",
