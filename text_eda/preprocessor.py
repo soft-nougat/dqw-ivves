@@ -116,59 +116,31 @@ def clean_data(df,feature):
 
     df = df.dropna()
 
+    bar = st.progress(0)
+
     # use lambda function to run through rows (entries)
     df[feature] = df[feature].apply(lambda x: contractions.fix(x))
 
+    bar.progress(25)
+
+    #st.success("Contractions fixed! For example, you're is turned into you are.")
+
     df[feature] =  df[feature].apply(lambda x: nltk.word_tokenize(x))
+
+    bar.progress(50)
+
+    #st.success("Tokenized text!")
 
     df[feature] = df[feature].apply(lambda x: normalize(x))
 
+    bar.progress(75)
+
+    #st.success("Normalized text! Removed stop words, noise, punctuation and turned numbers to text.")
+
     df[feature] = df[feature].apply(lambda x: lemmatize_verbs(x))
 
-    st.write(df[feature])
+    bar.progress(100)
+
+    #st.success("Lemmatized verbs!")
      
-    return df
-    
-def clean_data_1(df,feature):
-    """
-    function to:
-        1. de-noise
-            a) remove email and other symbols
-        2. tokenize
-        3. normalize
-            a) remove stopwords with NLTK
-            b) fix typos with wordnet
-            c) lemmatize with NLTK
-            d) replace numbers with words 
-    output: pandas dataframe
-    
-    """
-    df = df.dropna()
-    
-    #de-noising objects
-    url_pattern = re.compile(re.compile(r'https?://\S+|www\.S+'))
-    email_pattern = re.compile(re.compile(r'\S*@\S*\s?'))
-    
-    #loop over the column
-    doc = []
-    for entry in df[feature]:
-        
-        #1a)
-        textBlb = TextBlob(entry)     # Making our first textblob
-        textCorrected = textBlb.correct()   # Correcting the text
-        
-        tokens = contractions.fix(str(textCorrected))
-        #2
-        tokens = nltk.word_tokenize(tokens)
-        #1a)
-        tokens = [url_pattern.sub('', w) for w in tokens]
-        tokens = [email_pattern.sub('', w) for w in tokens]
-        #3a)
-        tokens = normalize(tokens)
-        #3b)
-        lemmas = lemmatize_verbs(tokens)
-        doc.append(' '.join(lemmas))   
-                      
-    df[feature]= doc 
-    
     return df

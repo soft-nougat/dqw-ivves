@@ -81,6 +81,7 @@ def text_data_app():
             
     else:
             st.subheader('Using Clean Data :droplet:')  #Clean data header
+
             data = pp.clean_data(data,feature=text_column)
             st.success('Data cleaning successfuly done!')
             
