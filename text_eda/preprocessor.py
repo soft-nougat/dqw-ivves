@@ -6,7 +6,6 @@ https://www.kdnuggets.com/2018/03/text-data-preprocessing-walkthrough-python.htm
 """
 import streamlit as st
 import warnings
-warnings.filterwarnings("ignore",category=DeprecationWarning)
 import re, unicodedata
 import nltk
 import contractions
@@ -14,34 +13,30 @@ import inflect
 from nltk.stem import LancasterStemmer, WordNetLemmatizer
 from nltk.corpus import stopwords
 from textblob import TextBlob
-nltk.download('wordnet')
-nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('omw-1.4')
+from bs4 import BeautifulSoup
+import spacy
+
+def remove_html(words):
+    # language agnostic
+    soup = BeautifulSoup(words, 'lxml')
+    clean_words = soup.get_text()
+    return clean_words
+
 
 def remove_non_ascii(words):
     """Remove non-ASCII characters from list of tokenized words"""
-    new_words = []
-    for word in words:
-        new_word = unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8', 'ignore')
-        new_words.append(new_word)
+    new_words = [unicodedata.normalize('NFKD', w).encode('ascii', 'ignore').decode('utf-8', 'ignore') for w in words]
     return new_words
 
 def to_lowercase(words):
     """Convert all characters to lowercase from list of tokenized words"""
-    new_words = []
-    for word in words:
-        new_word = word.lower()
-        new_words.append(new_word)
+    new_words = [word.lower() for word in words]
     return new_words
 
 def remove_punctuation(words):
     """Remove punctuation from list of tokenized words"""
-    new_words = []
-    for word in words:
-        new_word = re.sub(r'[^\w\s]', '', word)
-        if new_word != '':
-            new_words.append(new_word)
+    new_words = [re.sub(r'[^\w\s]', '', word) for word in words]
+
     return new_words
 
 def replace_numbers(words):
@@ -76,21 +71,34 @@ def stem_words(words):
 def lemmatize_verbs(words):
     """Lemmatize verbs in list of tokenized words"""
     lemmatizer = WordNetLemmatizer()
-    lemmas = []
-    for word in words:
-        lemma = lemmatizer.lemmatize(word, pos='v')
-        lemmas.append(lemma)
+
+    lemmas = [lemmatizer.lemmatize(i, pos="a") for i in words]
+
+    lemmas = " ".join(lemmas)
+
     return lemmas
 
 def normalize(words):
+    #de-noising objects
+    url_pattern = re.compile(re.compile(r'https?://\S+|www\.S+'))
+    email_pattern = re.compile(re.compile(r'\S*@\S*\s?'))
+
+    words = [url_pattern.sub('', w) for w in words]
+    words = [email_pattern.sub('', w) for w in words]
+    
     words = remove_non_ascii(words)
+    
     words = to_lowercase(words)
+    
     words = remove_punctuation(words)
+
     words = replace_numbers(words)
+   
     words = remove_stopwords(words)
-    
+
     return words
-    
+
+
 def clean_data(df,feature):
     """
     function to:
@@ -99,38 +107,40 @@ def clean_data(df,feature):
         2. tokenize
         3. normalize
             a) remove stopwords with NLTK
-            b) fix typos with wordnet
-            c) lemmatize with NLTK
-            d) replace numbers with words 
+            b) lemmatize with NLTK
+            c) replace numbers with words 
     output: pandas dataframe
-    
+
     """
+    nlp = spacy.load("xx_ent_wiki_sm")
+
     df = df.dropna()
-    
-    #de-noising objects
-    url_pattern = re.compile(re.compile(r'https?://\S+|www\.S+'))
-    email_pattern = re.compile(re.compile(r'\S*@\S*\s?'))
-    
-    #loop over the column
-    doc = []
-    for entry in df[feature]:
-        
-        #1a)
-        textBlb = TextBlob(entry)     # Making our first textblob
-        textCorrected = textBlb.correct()   # Correcting the text
-        
-        tokens = contractions.fix(str(textCorrected))
-        #2
-        tokens = nltk.word_tokenize(tokens)
-        #1a)
-        tokens = [url_pattern.sub('', w) for w in tokens]
-        tokens = [email_pattern.sub('', w) for w in tokens]
-        #3a)
-        tokens = normalize(tokens)
-        #3b)
-        lemmas = lemmatize_verbs(tokens)
-        doc.append(' '.join(lemmas))   
-                      
-    df[feature]= doc 
-    
+
+    bar = st.progress(0)
+
+    # use lambda function to run through rows (entries)
+    df[feature] = df[feature].apply(lambda x: contractions.fix(x))
+
+    bar.progress(25)
+
+    #st.success("Contractions fixed! For example, you're is turned into you are.")
+
+    df[feature] =  df[feature].apply(lambda x: nltk.word_tokenize(x))
+
+    bar.progress(50)
+
+    #st.success("Tokenized text!")
+
+    df[feature] = df[feature].apply(lambda x: normalize(x))
+
+    bar.progress(75)
+
+    #st.success("Normalized text! Removed stop words, noise, punctuation and turned numbers to text.")
+
+    df[feature] = df[feature].apply(lambda x: lemmatize_verbs(x))
+
+    bar.progress(100)
+
+    #st.success("Lemmatized verbs!")
+     
     return df
