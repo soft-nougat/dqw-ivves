@@ -196,7 +196,7 @@ def table_evaluator_comparison():
 
         selected_method = st.sidebar.selectbox("", 
                                                 ("Plot the differences", 
-                                                "Compare categorical columns"))
+                                                "Compare model performance"))
 
         if selected_method == "Plot the differences":
 
@@ -230,7 +230,7 @@ def table_evaluator_comparison():
             dataset_columns = original.columns
             options_columns = dataset_columns.insert(0, 'None')
             
-            evaluate_col = st.selectbox('Select a categorical column to analyse:', 
+            evaluate_col = st.selectbox('Select the target column:', 
                                         options_columns, 
                                         index=0)
         

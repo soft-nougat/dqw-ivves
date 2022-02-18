@@ -22,7 +22,6 @@ def remove_html(words):
     clean_words = soup.get_text()
     return clean_words
 
-
 def remove_non_ascii(words):
     """Remove non-ASCII characters from list of tokenized words"""
     new_words = [unicodedata.normalize('NFKD', w).encode('ascii', 'ignore').decode('utf-8', 'ignore') for w in words]
