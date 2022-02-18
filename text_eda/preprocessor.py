@@ -111,8 +111,6 @@ def clean_data(df,feature):
     output: pandas dataframe
 
     """
-    nlp = spacy.load("xx_ent_wiki_sm")
-
     df = df.dropna()
 
     bar = st.progress(0)
