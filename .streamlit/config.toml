@@ -5,3 +5,5 @@ secondaryBackgroundColor="#e2e2ff"
 textColor="#214869"
 [global]
 dataFrameSerialization = "legacy"
+[server]
+maxUploadSize = 10

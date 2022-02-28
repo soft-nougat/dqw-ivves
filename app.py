@@ -77,7 +77,6 @@ try:
     
     elif selected_structure == "Unstructured, image data":
         
-        
         from image_eda.image_data import *
         image_data_app()
     
