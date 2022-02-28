@@ -21,12 +21,6 @@ def structured_data_app():
 
     # ----------------------------------------------
     # session state
-    if 'pr' not in st.session_state:
-        st.session_state.pr = None
-
-    if 'sw' not in st.session_state:
-        st.session_state.sw = None
-
     if 'data' not in st.session_state:
         st.session_state.data = None
     
@@ -80,7 +74,7 @@ def structured_data_app():
 
             if step_3 == "EDA":
 
-                st.session_state.pr = analyse_file(st.session_state.data)
+                analyse_file(st.session_state.data)
 
             elif step_3 == "Preprocess and compare":
 
@@ -92,7 +86,7 @@ def structured_data_app():
            
     if selected_structure == "Compare 2 files":
         
-        st.session_state.sw = sweetviz_comparison(None, None, 0, text = "Step 3")
+        sweetviz_comparison(None, None, 0, text = "Step 3")
     
     if selected_structure == "Synthetic data comparison":
         
@@ -251,8 +245,7 @@ def analyse_file(data):
     """
     
     # generate a report and save it 
-    st.session_state['pr'] = data.profile_report()
-    pr = st.session_state['pr']
+    pr = data.profile_report()
     st_profile_report(pr)
     pr.to_file("pandas_prof.html")
     
@@ -529,6 +522,8 @@ def methods_pyc(columns, model):
 
 def detect_unfairness(X, y, data, label_column):
     """  
+    Not used currently ---
+
     Use the fat-forensics package to assess fairness of data
     Currently, only the accountability example is demoed
 
