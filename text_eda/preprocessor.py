@@ -98,7 +98,9 @@ def normalize(words):
 
     return words
 
-
+# suppress warnings because we are using a progress bar within a 
+# cache function
+@st.cache(suppress_st_warning=True)
 def clean_data(df,feature):
     """
     function to:

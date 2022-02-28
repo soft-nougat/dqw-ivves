@@ -19,11 +19,6 @@ from sklearn.utils import estimator_html_repr
 
 def structured_data_app():
 
-    # ----------------------------------------------
-    # session state
-    if 'data' not in st.session_state:
-        st.session_state.data = None
-    
     # the very necessary reference expander
     intro_text = """
     Welcome to the DQW for structured data analysis.

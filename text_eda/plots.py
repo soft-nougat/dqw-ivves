@@ -328,7 +328,17 @@ def plot(selected_plot,
                  "quantities, monetary values, percentages, etc.")
         
         st.write("This dashboard firstly offers NER instance count in input.")
-        ent = ner.plot_named_entity_barchart(data[text_column])
+        ent, x, y = ner.plot_named_entity_barchart(data[text_column])
+        
+        sns.barplot(x=y,y=x)
+        plt.xlabel('Row number')
+        plt.ylabel('NER')
+            
+        plt.title('NER instance count\n\n', 
+                fontweight ="bold")
+
+        # show plot in streamlit
+        st.pyplot()
         
         st.write("Secondly, it offers specific entity count in input.")
         

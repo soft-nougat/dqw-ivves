@@ -34,8 +34,11 @@ try:
     </style>
     """,
     unsafe_allow_html=True,
-)
+    )
 
+    # create ss object
+    if 'data' not in st.session_state:
+        st.session_state.data = None
     
     # set bg
     set_bg_hack('dqw_background.png')
@@ -68,16 +71,19 @@ try:
     elif selected_structure == "Unstructured, text data":
         
         from text_eda.text_data import *
+        st.session_state.data = None
         text_data_app()
 
     elif selected_structure == "Unstructured, audio data":
 
         from audio_eda.audio_data import *
+        st.session_state.data = None
         audio_data_app()
     
     elif selected_structure == "Unstructured, image data":
         
         from image_eda.image_data import *
+        st.session_state.data = None
         image_data_app()
     
 
