@@ -12,6 +12,7 @@ import contractions
 import inflect
 from nltk.stem import LancasterStemmer, WordNetLemmatizer
 from nltk.corpus import stopwords
+nltk.download('omw-1.4')
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 import spacy

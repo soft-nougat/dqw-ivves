@@ -92,6 +92,11 @@ Key points addressed:
 - EDA of images
 - Augmentation
 
+## Try it out yourself!
+
+Demo files have been provided in the [/demo_data]() folder. 
+Try out the app with them.
+
 ## How to run locally
 
 1.	Installation process:
