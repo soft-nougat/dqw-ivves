@@ -15,6 +15,44 @@ import os
 from os.path import basename
 from image_eda.augment import apply_augmentations
 
+def app_section_button(option1, option2, option3, option4):
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        # current page
+        col1.markdown(option1) 
+    with col2:
+        st.markdown(option2, unsafe_allow_html=True) 
+    with col3:
+        st.markdown(option3, unsafe_allow_html=True) 
+    with col4:
+        st.markdown(option4, unsafe_allow_html=True) 
+      
+
+def app_meta(icon):
+
+    # Set website details
+    st.set_page_config(page_title ="Data Quality Wrapper", 
+                       page_icon=icon, 
+                       layout='centered')
+    
+    # set sidebar width
+    st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
+        width: 300px;
+    }
+    [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
+        width: 300px;
+        margin-left: -300px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+    )
+
 def set_bg_hack(main_bg):
     '''
     A function to unpack an image from root folder and set as bg.

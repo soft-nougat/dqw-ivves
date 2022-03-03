@@ -15,38 +15,10 @@ try:
 
     from helper_functions import *
 
-    # Set website details
-    st.set_page_config(page_title ="Data Quality Wrapper", 
-                       page_icon='📊', 
-                       layout='centered')
-    
-    # set sidebar width
-    st.markdown(
-    """
-    <style>
-    [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
-        width: 300px;
-    }
-    [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
-        width: 300px;
-        margin-left: -300px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-    )
-
-    # create ss object
-    if 'data' not in st.session_state:
-        st.session_state.data = None
-    
-    # set bg
+    # app design
+    app_meta('📊')
     set_bg_hack('dqw_background.png')
 
-    # get logo
-    logo = Image.open('logo.png')
-    st.sidebar.image(logo, 
-                        use_column_width=True)
     
     # hide warning for st.pyplot() deprecation
     st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -55,36 +27,18 @@ try:
     display_app_header(main_txt='Data Quality Wrapper',
                        sub_txt='Clean, describe, visualise and select data for AI models')
     
-    # prompt the user with an option to select which data they want to 
-    # analyse
-    selected_structure = st.selectbox("Choose data structure to analyse", 
-                                      ("Structured data", 
-                                       "Unstructured, text data",
-                                       "Unstructured, audio data",
-                                       "Unstructured, image data"))
+    st.markdown("""---""")
     
-    if selected_structure == "Structured data":
-        
-        from tabular_eda.structured_data import *
-        structured_data_app()
-        
-    elif selected_structure == "Unstructured, text data":
-        
-        from text_eda.text_data import *
-        st.session_state.data = None
-        text_data_app()
-
-    elif selected_structure == "Unstructured, audio data":
-
-        from audio_eda.audio_data import *
-        st.session_state.data = None
-        audio_data_app()
+    st.write('Please select the data format/app section you want to use in the main window. ',
+    'Due to the multifunctionality of this app, we have split it into five.',
+    'This is the main app. Have fun!')
     
-    elif selected_structure == "Unstructured, image data":
-        
-        from image_eda.image_data import *
-        st.session_state.data = None
-        image_data_app()
+    # provide options to user to navigate to other dqw apps
+    app_section_button('[Image Data Section 🖼️](https://share.streamlit.io/soft-nougat/dqw-ivves_images/main/app.py)',
+    '[Tabular Data Section 🏗️](https://share.streamlit.io/soft-nougat/dqw-ivves_structured/main/app.py)',
+    '[Audio Data Section 🎶](https://share.streamlit.io/soft-nougat/dqw-ivves_audio/main/app.py)',
+    '[Text Data Section 📚](https://share.streamlit.io/soft-nougat/dqw-ivves_text/main/app.py)')
+    st.markdown("""---""")
     
 
 except KeyError:
