@@ -16,6 +16,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # visualise extracted NER count and extract NERs
+@st.cache()
 def plot_named_entity_barchart(text):
     nlp = spacy.load("en_core_web_sm")
     
@@ -29,22 +30,12 @@ def plot_named_entity_barchart(text):
     count=counter.most_common()
     
     x,y=map(list,zip(*count))
-    sns.barplot(x=y,y=x)
-    
-    plt.xlabel('Row number')
-    plt.ylabel('NER')
-          
-    plt.title('NER instance count\n\n', 
-              fontweight ="bold")
 
-    # show plot in streamlit
-    st.pyplot()
-    
     # get unique list elements to pass to
     # streamlit app for dropdown options
     ent = set(ent)
     
-    return ent
+    return ent, x, y
     
 # visualise tokens per entity
 def plot_most_common_named_entity_barchart(text, entity):

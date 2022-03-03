@@ -1,5 +1,5 @@
 """
-A script with th strucutured data analysis logic
+A script with the strucutured data analysis logic
 Additional scripts: report_generation
 """
 
@@ -19,11 +19,6 @@ from sklearn.utils import estimator_html_repr
 
 def structured_data_app():
 
-    # ----------------------------------------------
-    # session state
-    if 'data' not in st.session_state:
-        st.session_state.data = None
-    
     # the very necessary reference expander
     intro_text = """
     Welcome to the DQW for structured data analysis.
@@ -94,54 +89,68 @@ def structured_data_app():
 
 def upload_file():
 
-    data = st.sidebar.file_uploader("Upload dataset", 
-                            type="csv") 
-
-    if data:
-
-        st.subheader('A preview of input data is below, please wait for data to be analyzed :bar_chart:')
-        data = pd.read_csv(data)
-        st.write(data.head(5))
-
+    demo = st.sidebar.checkbox('Use demo data', value=False, help='Using the adult dataset')
+    if demo:
+        data = pd.read_csv('demo_data/tabular_demo.csv')
         return(data)
-
     else:
-        st.sidebar.warning("Please upload a dataset!")
+        data = st.sidebar.file_uploader("Upload dataset", 
+                                type="csv") 
 
-        return(None)
+        if data:
+
+            st.subheader('A preview of input data is below, please wait for data to be analyzed :bar_chart:')
+            data = pd.read_csv(data)
+            st.write(data.head(5))
+
+            return(data)
+
+        else:
+            st.sidebar.warning("Please upload a dataset!")
+
+            return(None)
         
             
 def upload_2_files():
-
     """
     High level app logic when comparing 2 files
     """
-    original = st.sidebar.file_uploader("Upload reference dataset", 
-                                        type="csv")
-
-    if original:
-
-        original = pd.read_csv(original)                        
-
-        comparison = st.sidebar.file_uploader("Upload comparison dataset", 
-                                                type="csv") 
-
-        if comparison:                      
-        
-            comparison = pd.read_csv(comparison)
-
-            st.subheader('A preview of input files is below, please wait for data to be compared :bar_chart:')
-            st.subheader('Reference data')
-            st.write(original.head(5))
-            st.subheader('Comparison data')
-            st.write(comparison.head(5))
-
-            return(original, comparison, 1)
-
+    demo = st.sidebar.checkbox('Use demo data', value=False, help='Using the table-evaluator demo datasets')
+    if demo:
+        original = pd.read_csv('demo_data/real_test_sample.csv')
+        comparison = pd.read_csv('demo_data/fake_test_sample.csv')
+        indicator = 1
     else:
-        st.sidebar.warning("Please upload a reference/original dataset.")
+        original = st.sidebar.file_uploader("Upload reference dataset", 
+                                            type="csv")
 
-        return(None, None, 0)
+        if original:
+
+            original = pd.read_csv(original)       
+            indicator = 0                 
+
+            comparison = st.sidebar.file_uploader("Upload comparison dataset", 
+                                                    type="csv") 
+
+            if comparison:                      
+            
+                comparison = pd.read_csv(comparison)
+                indicator = 1
+
+        else:
+            st.sidebar.warning("Please upload a reference/original dataset.")
+            indicator = 0
+            return(None, None, indicator)
+
+    # if data is available, continue with the app logic
+    if indicator == 1:
+        st.subheader('A preview of input files is below, please wait for data to be compared :bar_chart:')
+        st.subheader('Reference data')
+        st.write(original.head(5))
+        st.subheader('Comparison data')
+        st.write(comparison.head(5))
+
+        return(original, comparison, 1)
 
 def sweetviz_comparison(original, comparison, indicator, text, upload = True):
 
@@ -255,7 +264,6 @@ def analyse_file(data):
 
     return(pr)
 
-
 def preprocess(data):
     """
     Automated preprocessing of the structured dataset w/ pycaret
@@ -365,7 +373,7 @@ def preprocess(data):
 
             show_pp_file(data, get_config('X'), get_config('X_train'), get_config('X_test'),
             get_config('y'), get_config('y_train'), get_config('y_test'))
-    
+ 
 def show_pp_file(data, X, X_train = None, X_test = None, y = None, y_train = None, y_test = None):
     
     st.subheader("Preprocessing done! 🧼")
@@ -405,7 +413,6 @@ def show_pp_file(data, X, X_train = None, X_test = None, y = None, y_train = Non
             file_name="preprocessed_data_dqw.zip",
             mime="application/zip"
         )
-
 
 def methods_pyc(columns, model):
     """

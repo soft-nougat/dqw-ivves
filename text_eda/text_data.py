@@ -88,33 +88,31 @@ def text_data_app():
             image = Image.open("text_eda/pp.png")
             st.image(image, caption='Preprocessing steps done by DQW')
     
-    if clean_data_opt=='Run preprocessing':
-        display_app_header(main_txt = "Step 2",
-                          sub_txt= "Analyse data",
-                          is_sidebar=True)
-            
-        selected_plot = st.sidebar.radio(
-        "Choose 1 plot", ('Length of text', 
-                        'Word count',
-                        'Average word length',
-                        'Unique word count',
-                        'N-grams',
-                        'Topic modelling',
-                        'Wordcloud',
-                        'Sentiment',
-                        'NER',
-                        'POS',
-                        'Complexity Scores')
-        )
-        # final step
-        st.download_button(
-            label="Download clean data",
-            data=data.to_csv().encode('utf-8'),
-            file_name='clean_data.csv',
-            mime='text/csv',
-        )
+            display_app_header(main_txt = "Step 2",
+                            sub_txt= "Analyse data",
+                            is_sidebar=True)
+                
+            selected_plot = st.sidebar.radio(
+            "Choose 1 plot", ('Length of text', 
+                            'Word count',
+                            'Average word length',
+                            'Unique word count',
+                            'N-grams',
+                            'Topic modelling',
+                            'Wordcloud',
+                            'Sentiment',
+                            'NER',
+                            'POS',
+                            'Complexity Scores')
+            )
+            # final step
+            st.download_button(
+                label="Download clean data",
+                data=data.to_csv().encode('utf-8'),
+                file_name='clean_data.csv',
+                mime='text/csv',
+            )
                     
-    
     st.subheader('A preview of input data is below, please select plot to start analysis :bar_chart:')
     st.write(data.head(5))
     
