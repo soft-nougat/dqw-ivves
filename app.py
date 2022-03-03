@@ -29,7 +29,9 @@ try:
     
     st.markdown("""---""")
     
-    st.write('Please select the data format/app section you want to use in the main window. ',
+    st.write('Welcome to the DQW! An app for automated preprocessing of data.')
+    
+    st.write('Please select the data format/app section you want to use below. ',
     'Due to the multifunctionality of this app, we have split it into five.',
     'This is the main app. Have fun!')
     
