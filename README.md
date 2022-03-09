@@ -1,8 +1,12 @@
 # Welcome to the DQW repository! 
 
-[Streamlit app 📊](https://share.streamlit.io/soft-nougat/dqw-ivves/app.py)
+This repo contains the complete DQW streamlit app code, however, the streamlit apps have been split into 5 for maintenance purposes:
 
-This repo contains the DQW streamlit app code.
+- [Main Streamlit app 📊](https://share.streamlit.io/soft-nougat/dqw-ivves/app.py)
+- [Tabular Data Section 🏗️](https://share.streamlit.io/soft-nougat/dqw-ivves_structured/main/app.py)
+- [Audio Data Section 🎶](https://share.streamlit.io/soft-nougat/dqw-ivves_audio/main/app.py)
+- [Text Data Section 📚](https://share.streamlit.io/soft-nougat/dqw-ivves_text/main/app.py)
+- [Image Data Section 🖼️](https://share.streamlit.io/soft-nougat/dqw-ivves_images/main/app.py)
 
 This application was built in the [ITEA IVVES](https://itea4.org/project/ivves.html) project and is an accelerator of the [Sogeti Quality AI Framework](https://www.sogeti.nl/nieuws/artificial-intelligence/blogs/artificial-intelligence-quality-framework), providing methods and advice on the preprocessing steps to accelerate and ensure transparency of the data preprocessing pipeline.
 
