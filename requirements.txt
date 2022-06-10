@@ -1,7 +1,7 @@
 librosa
 table_evaluator
 streamlit-pandas-profiling
-streamlit==1.4.0
+streamlit==1.10.0
 Pillow>=8.1.1
 nltk
 contractions==0.0.48
