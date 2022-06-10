@@ -111,7 +111,7 @@ Try out the app with them.
     
     Run pip install -r requirements.txt
     
-    Run streamlit app.py to launch app
+    Run streamlit run app.py to launch app
 
 2.	Software dependencies:
 
